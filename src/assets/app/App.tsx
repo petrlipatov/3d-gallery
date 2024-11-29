@@ -6,6 +6,7 @@ import { useLoader } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import { Suspense } from "react";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 
 const images = [
   { lowres: "/previews/1.jpeg", hires: "/images/1.jpeg" },
@@ -28,13 +29,43 @@ const images = [
   { lowres: "/previews/18.jpeg", hires: "/images/18.jpeg" },
 ];
 
+function Popup({ image, onClose }) {
+  return createPortal(
+    <div className={s.popup} onClick={onClose}>
+      <div className={s.popupContent}>
+        <LazyLoadedImage src={image} alt="Selected" />
+      </div>
+    </div>,
+    document.getElementById("modal-root")
+  );
+}
+
+function LazyLoadedImage({ src, alt }) {
+  const [loadedSrc, setLoadedSrc] = useState(null);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => setLoadedSrc(src);
+  }, [src]);
+
+  if (!loadedSrc) {
+    return <div className={s.loader}>Загрузка изображения...</div>;
+  }
+
+  return <img src={loadedSrc} alt={alt} className={s.image} />;
+}
+
 function ImagePlane({ data, position, onClick }) {
   const texture = useLoader(THREE.TextureLoader, data.lowres) as THREE.Texture;
   return (
     <mesh
       position={position}
       rotation={[0, 0, 0]}
-      onClick={() => onClick(data.hires)}
+      onClick={(e) => {
+        onClick(data.hires);
+        e.stopPropagation();
+      }}
     >
       <planeGeometry args={[1, 1]} />
       <meshBasicMaterial map={texture} />
@@ -42,7 +73,7 @@ function ImagePlane({ data, position, onClick }) {
   );
 }
 
-function CloudOfImages({ spacing = 1.5, imagesToRender = 200, onClick }) {
+const CloudOfImages = ({ spacing = 1.5, imagesToRender = 200, onClick }) => {
   const positions = useMemo(() => {
     return Array.from({ length: imagesToRender }, () => {
       const angle = Math.random() * Math.PI * 2;
@@ -52,7 +83,7 @@ function CloudOfImages({ spacing = 1.5, imagesToRender = 200, onClick }) {
       return [
         Math.cos(angle) * radiusX * Math.random(),
         Math.sin(angle) * radiusY * Math.random(),
-        (Math.random() - 0.5) * 7,
+        (Math.random() - 0.2) * 7,
       ];
     });
   }, [spacing, imagesToRender]);
@@ -72,29 +103,14 @@ function CloudOfImages({ spacing = 1.5, imagesToRender = 200, onClick }) {
       })}
     </>
   );
-}
+};
 
 function App() {
   const [image, setImage] = useState(null);
 
-  useEffect(() => {
-    console.log(image);
-  }, [image]);
-
   return (
     <div id="canvas-container" className={s.canvasContainer}>
-      {image && (
-        <div
-          className={s.popup}
-          onClick={() => {
-            setImage(null);
-          }}
-        >
-          <div className={s.popupContent}>
-            <img src={image} alt="Selected" />
-          </div>
-        </div>
-      )}
+      {image && <Popup image={image} onClose={() => setImage(null)} />}
 
       <Canvas camera={{ fov: 75, position: [0, 0, 10] }}>
         <Suspense fallback={null}>
@@ -106,6 +122,8 @@ function App() {
           enablePan
           zoomToCursor
           enableRotate={false}
+          minDistance={-20}
+          maxDistance={40}
           mouseButtons={{
             LEFT: THREE.MOUSE.PAN,
             MIDDLE: THREE.MOUSE.DOLLY,
