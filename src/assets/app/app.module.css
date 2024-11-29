@@ -1,0 +1,46 @@
+.canvasContainer {
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  background: linear-gradient(45deg, #add8e6, #dfd19f);
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popupContent {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.popupContent img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 1);
+}
