@@ -7,6 +7,7 @@ import { useEffect, useMemo } from "react";
 import { Suspense } from "react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { useSearchParams } from "react-router";
 
 const images = [
   { lowres: "/previews/1.jpeg", hires: "/images/1.jpeg" },
@@ -106,15 +107,19 @@ const CloudOfImages = ({ spacing = 1.5, imagesToRender = 200, onClick }) => {
 };
 
 function App() {
-  const [image, setImage] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const image = searchParams.get("image");
+
+  const openImage = (image) => setSearchParams({ image });
+  const closeImage = () => setSearchParams({});
 
   return (
     <div id="canvas-container" className={s.canvasContainer}>
-      {image && <Popup image={image} onClose={() => setImage(null)} />}
+      {image && <Popup image={image} onClose={closeImage} />}
 
       <Canvas camera={{ fov: 75, position: [0, 0, 10] }}>
         <Suspense fallback={null}>
-          <CloudOfImages onClick={setImage} />
+          <CloudOfImages onClick={openImage} />
         </Suspense>
 
         <OrbitControls
