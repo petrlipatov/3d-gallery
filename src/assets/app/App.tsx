@@ -8,7 +8,7 @@ import { Suspense } from "react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router";
-import { useSpring, animated, config } from "@react-spring/three";
+import { useSpring, animated, config, useSprings } from "@react-spring/three";
 
 const images = [
   { lowres: "/previews/1.jpeg", hires: "/images/1.jpeg" },
@@ -99,38 +99,57 @@ const positionsRandom = Array.from({ length: 200 }, () => {
   ];
 });
 
-// const generateGridPositions = (rows, cols, spacing = 1.5) => {
-//   const positions = [];
+const generateGridPositions = (totalItems, spacing = 1.5) => {
+  // Вычисляем количество строк и столбцов, чтобы сетка была квадратной
+  const cols = Math.ceil(Math.sqrt(totalItems));
+  const rows = Math.ceil(totalItems / cols);
 
-//   for (let row = 0; row < rows; row++) {
-//     for (let col = 0; col < cols; col++) {
-//       const x = col * spacing;
-//       const y = row * spacing;
-//       const z = Math.random() * 10;
+  // Рассчитываем смещение, чтобы сетка была по центру
+  const offsetX = ((cols - 1) * spacing) / 2;
+  const offsetY = ((rows - 1) * spacing) / 2;
 
-//       positions.push([x, y, z]);
-//     }
-//   }
+  const positions = [];
 
-//   return positions;
-// };
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      if (positions.length >= totalItems) return positions;
 
-// const positionsGrid = generateGridPositions(10, 10, 1.5);
+      const x = col * spacing - offsetX;
+      const y = row * spacing - offsetY;
 
-const CloudOfImages = ({ onClick }) => {
-  // const objectsRef = useRef<THREE.Mesh[]>([]);
-  // const targetsRef = useRef<any[]>([]);
+      positions.push([x, y, 0]); // Все элементы будут располагаться в плоскости Z=0
+    }
+  }
 
+  return positions;
+};
+
+const positionsGrid = generateGridPositions(200);
+
+const CloudOfImages = ({ reversed, onClick }) => {
+  const springs = useSprings(
+    positionsRandom.length,
+    positionsRandom.map((pos, index) => ({
+      position: reversed ? positionsGrid[index] : pos, // Если reversed, анимация идет к начальной позиции
+      config: {
+        duration: 1000 + Math.min(Math.random() * 1000, 2000),
+      },
+      from: {
+        position: reversed ? positionsRandom[index] : positionsGrid[index],
+      },
+      to: { position: reversed ? positionsGrid[index] : pos }, // Конечная позиция зависит от реверса
+    }))
+  );
   return (
     <>
-      {Array.from({ length: positionsRandom.length }).map((_, index) => {
+      {springs.map((spring, index) => {
         const image = images[index % images.length];
         return (
           <ImagePlane
-            key={index}
+            key={index + "image"}
             data={image}
-            position={positionsRandom[index]}
             onClick={onClick}
+            position={spring.position}
           />
         );
       })}
@@ -140,18 +159,24 @@ const CloudOfImages = ({ onClick }) => {
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [reversed, setReversed] = useState(false); // Состояние для реверса
+
   const image = searchParams.get("image");
 
   const openImage = (image) => setSearchParams({ image });
   const closeImage = () => setSearchParams({});
 
+  const toggleReverse = () => {
+    setReversed(!reversed);
+  };
+
   return (
     <div id="canvas-container" className={s.canvasContainer}>
       {image && <Popup image={image} onClose={closeImage} />}
-
+      <button onClick={toggleReverse}>Тоглить анимацию</button>
       <Canvas camera={{ fov: 75, position: [0, 0, 20] }}>
         <Suspense fallback={null}>
-          <CloudOfImages onClick={openImage} />
+          <CloudOfImages onClick={openImage} reversed={reversed} />
         </Suspense>
 
         <OrbitControls
