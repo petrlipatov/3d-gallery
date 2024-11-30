@@ -1,9 +1,9 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Loader } from "@react-three/drei";
 import * as THREE from "three";
 import s from "./app.module.css";
 import { useLoader } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Suspense } from "react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
