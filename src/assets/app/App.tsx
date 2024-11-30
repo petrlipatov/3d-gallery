@@ -1,13 +1,14 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Loader } from "@react-three/drei";
 import * as THREE from "three";
 import s from "./app.module.css";
 import { useLoader } from "@react-three/fiber";
-import { useEffect, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import { Suspense } from "react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router";
+import { useSpring, animated, config } from "@react-spring/three";
 
 const images = [
   { lowres: "/previews/1.jpeg", hires: "/images/1.jpeg" },
@@ -59,45 +60,76 @@ function LazyLoadedImage({ src, alt }) {
 
 function ImagePlane({ data, position, onClick }) {
   const texture = useLoader(THREE.TextureLoader, data.lowres) as THREE.Texture;
+  const [active, setActive] = useState(false);
+
+  const { scale } = useSpring({
+    scale: active ? 1.2 : 1,
+    config: config.wobbly,
+  });
+
   return (
-    <mesh
+    <animated.mesh
       position={position}
       rotation={[0, 0, 0]}
+      scale={scale}
       onClick={(e) => {
         onClick(data.hires);
         e.stopPropagation();
       }}
+      onPointerOver={() => setActive(!active)}
+      onPointerOut={() => setActive(!active)}
     >
       <planeGeometry args={[1, 1]} />
       <meshBasicMaterial map={texture} />
-    </mesh>
+    </animated.mesh>
   );
 }
 
-const CloudOfImages = ({ spacing = 1.5, imagesToRender = 200, onClick }) => {
-  const positions = useMemo(() => {
-    return Array.from({ length: imagesToRender }, () => {
-      const angle = Math.random() * Math.PI * 2;
-      const radiusX = spacing * 20;
-      const radiusY = spacing * 20;
+const positionsRandom = Array.from({ length: 200 }, () => {
+  const spacing = 1.5;
 
-      return [
-        Math.cos(angle) * radiusX * Math.random(),
-        Math.sin(angle) * radiusY * Math.random(),
-        (Math.random() - 0.2) * 7,
-      ];
-    });
-  }, [spacing, imagesToRender]);
+  const angle = Math.random() * Math.PI * 2;
+  const radiusX = spacing * 20;
+  const radiusY = spacing * 20;
+
+  return [
+    Math.cos(angle) * radiusX * Math.random(),
+    Math.sin(angle) * radiusY * Math.random(),
+    Math.random() * 10,
+  ];
+});
+
+// const generateGridPositions = (rows, cols, spacing = 1.5) => {
+//   const positions = [];
+
+//   for (let row = 0; row < rows; row++) {
+//     for (let col = 0; col < cols; col++) {
+//       const x = col * spacing;
+//       const y = row * spacing;
+//       const z = Math.random() * 10;
+
+//       positions.push([x, y, z]);
+//     }
+//   }
+
+//   return positions;
+// };
+
+// const positionsGrid = generateGridPositions(10, 10, 1.5);
+
+const CloudOfImages = ({ onClick }) => {
+  // const objectsRef = useRef<THREE.Mesh[]>([]);
+  // const targetsRef = useRef<any[]>([]);
 
   return (
     <>
-      {Array.from({ length: imagesToRender }).map((_, index) => {
+      {Array.from({ length: positionsRandom.length }).map((_, index) => {
         const image = images[index % images.length];
         return (
           <ImagePlane
             key={index}
             data={image}
-            position={positions[index]}
+            position={positionsRandom[index]}
             onClick={onClick}
           />
         );
@@ -117,7 +149,7 @@ function App() {
     <div id="canvas-container" className={s.canvasContainer}>
       {image && <Popup image={image} onClose={closeImage} />}
 
-      <Canvas camera={{ fov: 75, position: [0, 0, 10] }}>
+      <Canvas camera={{ fov: 75, position: [0, 0, 20] }}>
         <Suspense fallback={null}>
           <CloudOfImages onClick={openImage} />
         </Suspense>
