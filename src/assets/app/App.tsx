@@ -1,14 +1,21 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Loader } from "@react-three/drei";
 import * as THREE from "three";
 import s from "./app.module.css";
 import { useLoader } from "@react-three/fiber";
-import { useEffect } from "react";
-import { Suspense } from "react";
-import { useState } from "react";
+import {
+  useEffect,
+  Suspense,
+  useState,
+  useRef,
+  // memo,
+  useCallback,
+  forwardRef,
+  // useLayoutEffect,
+} from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router";
-import { useSpring, animated, config, useSprings } from "@react-spring/three";
+// import { useSpring, animated, config, useSprings } from "@react-spring/three";
 
 const images = [
   { lowres: "/previews/1.jpeg", hires: "/images/1.jpeg" },
@@ -30,6 +37,45 @@ const images = [
   { lowres: "/previews/17.jpeg", hires: "/images/17.jpeg" },
   { lowres: "/previews/18.jpeg", hires: "/images/18.jpeg" },
 ];
+
+const positionsRandom = Array.from({ length: 200 }, () => {
+  const spacing = 1.5;
+
+  const angle = Math.random() * Math.PI * 2;
+  const radiusX = spacing * 20;
+  const radiusY = spacing * 20;
+
+  return [
+    Math.cos(angle) * radiusX * Math.random(),
+    Math.sin(angle) * radiusY * Math.random(),
+    Math.random() * 10,
+  ];
+});
+
+const generateGridPositions = (totalItems, spacing = 1.5) => {
+  const cols = Math.ceil(Math.sqrt(totalItems));
+  const rows = Math.ceil(totalItems / cols);
+
+  const offsetX = ((cols - 1) * spacing) / 2;
+  const offsetY = ((rows - 1) * spacing) / 2;
+
+  const positions = [];
+
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      if (positions.length >= totalItems) return positions;
+
+      const x = col * spacing - offsetX;
+      const y = row * spacing - offsetY;
+
+      positions.push([x, y, 0]);
+    }
+  }
+
+  return positions;
+};
+
+const positionsGrid = generateGridPositions(200);
 
 function Popup({ image, onClose }) {
   return createPortal(
@@ -58,98 +104,77 @@ function LazyLoadedImage({ src, alt }) {
   return <img src={loadedSrc} alt={alt} className={s.image} />;
 }
 
-function ImagePlane({ data, position, onClick }) {
+// @ts-expect-error вапва
+const ImagePlane = forwardRef(({ data, onClick }, ref) => {
   const texture = useLoader(THREE.TextureLoader, data.lowres) as THREE.Texture;
-  const [active, setActive] = useState(false);
-
-  const { scale } = useSpring({
-    scale: active ? 1.2 : 1,
-    config: config.wobbly,
-  });
 
   return (
-    <animated.mesh
-      position={position}
-      rotation={[0, 0, 0]}
-      scale={scale}
-      onClick={(e) => {
+    <mesh
+      // @ts-expect-error вапва
+      ref={ref}
+      onClick={() => {
         onClick(data.hires);
-        e.stopPropagation();
       }}
-      onPointerOver={() => setActive(!active)}
-      onPointerOut={() => setActive(!active)}
     >
       <planeGeometry args={[1, 1]} />
       <meshBasicMaterial map={texture} />
-    </animated.mesh>
+    </mesh>
   );
-}
-
-const positionsRandom = Array.from({ length: 200 }, () => {
-  const spacing = 1.5;
-
-  const angle = Math.random() * Math.PI * 2;
-  const radiusX = spacing * 20;
-  const radiusY = spacing * 20;
-
-  return [
-    Math.cos(angle) * radiusX * Math.random(),
-    Math.sin(angle) * radiusY * Math.random(),
-    Math.random() * 10,
-  ];
 });
 
-const generateGridPositions = (totalItems, spacing = 1.5) => {
-  // Вычисляем количество строк и столбцов, чтобы сетка была квадратной
-  const cols = Math.ceil(Math.sqrt(totalItems));
-  const rows = Math.ceil(totalItems / cols);
-
-  // Рассчитываем смещение, чтобы сетка была по центру
-  const offsetX = ((cols - 1) * spacing) / 2;
-  const offsetY = ((rows - 1) * spacing) / 2;
-
-  const positions = [];
-
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      if (positions.length >= totalItems) return positions;
-
-      const x = col * spacing - offsetX;
-      const y = row * spacing - offsetY;
-
-      positions.push([x, y, 0]); // Все элементы будут располагаться в плоскости Z=0
-    }
-  }
-
-  return positions;
-};
-
-const positionsGrid = generateGridPositions(200);
-
 const CloudOfImages = ({ reversed, onClick }) => {
-  const springs = useSprings(
-    positionsRandom.length,
-    positionsRandom.map((pos, index) => ({
-      position: reversed ? positionsGrid[index] : pos, // Если reversed, анимация идет к начальной позиции
-      config: {
-        duration: 1000 + Math.min(Math.random() * 1000, 2000),
-      },
-      from: {
-        position: reversed ? positionsRandom[index] : positionsGrid[index],
-      },
-      to: { position: reversed ? positionsGrid[index] : pos }, // Конечная позиция зависит от реверса
-    }))
-  );
+  const refs = useRef([]);
+
+  useEffect(() => {
+    refs.current.forEach((ref, i) => {
+      ref.position.set(
+        positionsRandom[i][0],
+        positionsRandom[i][1],
+        positionsRandom[i][2]
+      );
+    });
+  }, []);
+
+  useFrame(() => {
+    if (reversed) {
+      refs.current.forEach((ref, i) => {
+        ref.position.lerp(
+          new THREE.Vector3(
+            positionsGrid[i][0],
+            positionsGrid[i][1],
+            positionsGrid[i][2]
+          ),
+          0.05
+        );
+      });
+    } else {
+      refs.current.forEach((ref, i) => {
+        ref.position.lerp(
+          new THREE.Vector3(
+            positionsRandom[i][0],
+            positionsRandom[i][1],
+            positionsRandom[i][2]
+          ),
+          0.05
+        );
+      });
+    }
+  });
+
   return (
     <>
-      {springs.map((spring, index) => {
+      {positionsRandom.map((_, index) => {
         const image = images[index % images.length];
         return (
           <ImagePlane
-            key={index + "image"}
+            key={index}
+            // @ts-expect-error вапва
             data={image}
+            position={positionsRandom[index]}
             onClick={onClick}
-            position={spring.position}
+            ref={(el) => {
+              refs.current[index] = el;
+            }}
           />
         );
       })}
@@ -159,16 +184,16 @@ const CloudOfImages = ({ reversed, onClick }) => {
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [reversed, setReversed] = useState(false); // Состояние для реверса
+  const [reversed, setReversed] = useState(false);
 
   const image = searchParams.get("image");
 
   const openImage = (image) => setSearchParams({ image });
   const closeImage = () => setSearchParams({});
 
-  const toggleReverse = () => {
+  const toggleReverse = useCallback(() => {
     setReversed(!reversed);
-  };
+  }, [reversed]);
 
   return (
     <div id="canvas-container" className={s.canvasContainer}>
@@ -185,7 +210,7 @@ function App() {
           zoomToCursor
           enableRotate={false}
           minDistance={-20}
-          maxDistance={40}
+          maxDistance={15}
           mouseButtons={{
             LEFT: THREE.MOUSE.PAN,
             MIDDLE: THREE.MOUSE.DOLLY,
