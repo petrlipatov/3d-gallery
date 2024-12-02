@@ -1,6 +1,18 @@
+## Desc
+An interactive 3D experience built using React Three Fiber (R3F) and Three.js. The project showcases dynamic animations, smooth transitions, and responsive layouts optimized for various screen sizes. 
 
-![Screenshot 2024-12-01 at 11 00 34](https://github.com/user-attachments/assets/b17ad53d-7e08-4142-accc-b99f9635aaa2)
+## Initial problem 
+
+When manipulating hundreds of objects in 3D space, libraries (GSAP, React-Spring) create long tasks lasting up to 1000 ms. In this R3F demo, I solved the issue by using native Three.js methods, reserving spring animations for smaller, precise tasks. This reduced performance bottlenecks and ensured smooth, responsive interactions, even in complex 3D scenes.
+
+![Uploading Screenshot 2024-12-02 at 18.02.16.png…]()
+
+Tech
 
 
+- React
+- TypeScript
+- React Three Fiber (R3F)
+- Three.js
 
 https://testing-stage-domain.tech/
