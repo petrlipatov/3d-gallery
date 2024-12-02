@@ -38,21 +38,25 @@ const images = [
   { lowres: "/previews/18.jpeg", hires: "/images/18.jpeg" },
 ];
 
-const positionsRandom = Array.from({ length: 200 }, () => {
-  const spacing = 1.5;
+function generateRandom() {
+  return Array.from({ length: 200 }, () => {
+    const spacing = 1.5;
 
-  const angle = Math.random() * Math.PI * 2;
-  const radiusX = spacing * 20;
-  const radiusY = spacing * 20;
+    const angle = Math.random() * Math.PI * 2;
+    const radiusX = spacing * 20;
+    const radiusY = spacing * 20;
 
-  return [
-    Math.cos(angle) * radiusX * Math.random(),
-    Math.sin(angle) * radiusY * Math.random(),
-    Math.random() * 10,
-  ];
-});
+    return [
+      Math.cos(angle) * radiusX * Math.random(),
+      Math.sin(angle) * radiusY * Math.random(),
+      Math.random() * 10,
+    ];
+  });
+}
 
-const generateGridPositions = (totalItems, spacing = 1.5) => {
+const positionsRandom = generateRandom();
+
+const generateGridPositions = (totalItems, spacing = 2) => {
   const cols = Math.ceil(Math.sqrt(totalItems));
   const rows = Math.ceil(totalItems / cols);
 
@@ -122,21 +126,21 @@ const ImagePlane = forwardRef(({ data, onClick }, ref) => {
   );
 });
 
-const CloudOfImages = ({ reversed, onClick }) => {
+const CloudOfImages = ({ activeAnimation, onClick, randomCoordinates }) => {
   const refs = useRef([]);
 
   useEffect(() => {
     refs.current.forEach((ref, i) => {
       ref.position.set(
-        positionsRandom[i][0],
-        positionsRandom[i][1],
-        positionsRandom[i][2]
+        randomCoordinates[i][0],
+        randomCoordinates[i][1],
+        randomCoordinates[i][2]
       );
     });
   }, []);
 
   useFrame(() => {
-    if (reversed) {
+    if (activeAnimation === "grid") {
       refs.current.forEach((ref, i) => {
         ref.position.lerp(
           new THREE.Vector3(
@@ -147,13 +151,13 @@ const CloudOfImages = ({ reversed, onClick }) => {
           0.05
         );
       });
-    } else {
+    } else if (activeAnimation === "shuffle") {
       refs.current.forEach((ref, i) => {
         ref.position.lerp(
           new THREE.Vector3(
-            positionsRandom[i][0],
-            positionsRandom[i][1],
-            positionsRandom[i][2]
+            randomCoordinates[i][0],
+            randomCoordinates[i][1],
+            randomCoordinates[i][2]
           ),
           0.05
         );
@@ -184,24 +188,44 @@ const CloudOfImages = ({ reversed, onClick }) => {
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [reversed, setReversed] = useState(false);
+  const [activeAnimation, setActiveAnimation] = useState(null);
+  const [randomCoordinates, setRandomCoordinate] = useState(null);
 
   const image = searchParams.get("image");
+
+  useEffect(() => {
+    const data = generateRandom();
+    setRandomCoordinate(data);
+  }, []);
 
   const openImage = (image) => setSearchParams({ image });
   const closeImage = () => setSearchParams({});
 
-  const toggleReverse = useCallback(() => {
-    setReversed(!reversed);
-  }, [reversed]);
+  const toggleShuffle = () => {
+    if (activeAnimation === "shuffle") {
+      const data = generateRandom();
+      setRandomCoordinate(data);
+    }
+    setActiveAnimation("shuffle");
+  };
+  const toggleByDate = () => {
+    setActiveAnimation("grid");
+  };
+  const toggleGrid = () => {
+    setActiveAnimation("grid");
+  };
 
   return (
     <div id="canvas-container" className={s.canvasContainer}>
       {image && <Popup image={image} onClose={closeImage} />}
-      <button onClick={toggleReverse}>Тоглить анимацию</button>
+
       <Canvas camera={{ fov: 75, position: [0, 0, 20] }}>
         <Suspense fallback={null}>
-          <CloudOfImages onClick={openImage} reversed={reversed} />
+          <CloudOfImages
+            onClick={openImage}
+            activeAnimation={activeAnimation}
+            randomCoordinates={randomCoordinates}
+          />
         </Suspense>
 
         <OrbitControls
@@ -210,7 +234,7 @@ function App() {
           zoomToCursor
           enableRotate={false}
           minDistance={-20}
-          maxDistance={15}
+          maxDistance={25}
           mouseButtons={{
             LEFT: THREE.MOUSE.PAN,
             MIDDLE: THREE.MOUSE.DOLLY,
@@ -218,6 +242,11 @@ function App() {
         />
       </Canvas>
       <Loader />
+      <div className={s.controlsContainer}>
+        <button onClick={toggleShuffle}>shuffle</button>
+        <button onClick={toggleByDate}>by date</button>
+        <button onClick={toggleGrid}>grid</button>
+      </div>
     </div>
   );
 }

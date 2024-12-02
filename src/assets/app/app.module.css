@@ -1,4 +1,5 @@
 .canvasContainer {
+  position: relative;
   width: 100vw;
   height: 100vh;
   background-color: black;
@@ -43,4 +44,13 @@
 
 .closeButton:hover {
   background: rgba(255, 255, 255, 1);
+}
+
+.controlsContainer {
+  position: absolute;
+  display: flex;
+  gap: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 32px;
 }
