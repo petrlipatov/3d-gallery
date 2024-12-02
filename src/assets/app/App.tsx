@@ -129,15 +129,15 @@ const ImagePlane = forwardRef(({ data, onClick }, ref) => {
 const CloudOfImages = ({ activeAnimation, onClick, randomCoordinates }) => {
   const refs = useRef([]);
 
-  useEffect(() => {
-    refs.current.forEach((ref, i) => {
-      ref.position.set(
-        randomCoordinates[i][0],
-        randomCoordinates[i][1],
-        randomCoordinates[i][2]
-      );
-    });
-  }, []);
+  // useEffect(() => {
+  //   refs.current.forEach((ref, i) => {
+  //     ref.position.set(
+  //       randomCoordinates[i][0],
+  //       randomCoordinates[i][1],
+  //       randomCoordinates[i][2]
+  //     );
+  //   });
+  // }, []);
 
   useFrame(() => {
     if (activeAnimation === "grid") {
@@ -188,7 +188,7 @@ const CloudOfImages = ({ activeAnimation, onClick, randomCoordinates }) => {
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeAnimation, setActiveAnimation] = useState(null);
+  const [activeAnimation, setActiveAnimation] = useState("shuffle");
   const [randomCoordinates, setRandomCoordinate] = useState(null);
 
   const image = searchParams.get("image");
