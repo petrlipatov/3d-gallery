@@ -54,3 +54,9 @@
   transform: translateX(-50%);
   bottom: 32px;
 }
+
+@media (max-width: 480px) {
+  .controlsContainer {
+    bottom: 130px;
+  }
+}

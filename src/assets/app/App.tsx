@@ -9,7 +9,6 @@ import {
   useState,
   useRef,
   // memo,
-  useCallback,
   forwardRef,
   // useLayoutEffect,
 } from "react";
@@ -103,7 +102,7 @@ function LazyLoadedImage({ src, alt }) {
   }, [src]);
 
   if (!loadedSrc) {
-    return <div className={s.loader}>Загрузка изображения...</div>;
+    return <div className={s.loader}>loading</div>;
   }
 
   return <img src={loadedSrc} alt={alt} className={s.image} />;
