@@ -7,7 +7,9 @@ An interactive 3D experience built using React Three Fiber (R3F) and Three.js. T
 
 ## Initial problem 
 
-When manipulating hundreds of objects in 3D space, libraries (GSAP, React-Spring) create long tasks lasting up to 1000 ms. In this R3F demo, I solved the issue by using native Three.js methods, reserving spring animations for smaller, precise tasks. This reduced performance bottlenecks and ensured smooth, responsive interactions, even in complex 3D scenes.
+When manipulating hundreds of objects in 3D space, libraries (GSAP, React-Spring) create long tasks lasting up to 1000 ms. In this R3F demo, I solved the issue by using native Three.js methods, reserving spring animations for smaller, precise tasks. This reduced performance bottlenecks and ensured smooth, responsive interactions.
+
+*While there are many examples of optimizing Three.js performance, similar resources for R3F are scarce.
 
 ## Tech
 
