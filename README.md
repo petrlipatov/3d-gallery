@@ -1,9 +1,5 @@
 
-
-
-![Screen Recording 2024-12-02 at 17 26 11 (4)](https://github.com/user-attachments/assets/c90505cd-d114-4a63-80af-6d767108ecad)
-
-
+![Screenshot 2024-12-01 at 11 00 34](https://github.com/user-attachments/assets/b17ad53d-7e08-4142-accc-b99f9635aaa2)
 
 
 
