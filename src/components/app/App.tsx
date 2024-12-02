@@ -141,16 +141,6 @@ const ImagePlane = forwardRef(({ data, onClick }, ref) => {
 const CloudOfImages = ({ activeAnimation, onClick, randomCoordinates }) => {
   const refs = useRef([]);
 
-  // useEffect(() => {
-  //   refs.current.forEach((ref, i) => {
-  //     ref.position.set(
-  //       randomCoordinates[i][0],
-  //       randomCoordinates[i][1],
-  //       randomCoordinates[i][2]
-  //     );
-  //   });
-  // }, []);
-
   useFrame(() => {
     if (activeAnimation === "grid") {
       refs.current.forEach((ref, i) => {
