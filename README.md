@@ -1,6 +1,8 @@
-https://github.com/user-attachments/assets/9454ec0a-e098-4c27-b168-67078d48b10c
+https://github.com/user-attachments/assets/db540750-ae25-40b0-bb2f-6384f7275482
+
 
 ## Desc
+
 An interactive 3D experience built using React Three Fiber (R3F) and Three.js. The project showcases dynamic animations, smooth transitions, and responsive layouts optimized for various screen sizes. 
 
 ## Initial problem 
