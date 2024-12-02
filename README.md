@@ -1,50 +1,23 @@
-# React + TypeScript + Vite
+https://github.com/user-attachments/assets/db540750-ae25-40b0-bb2f-6384f7275482
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+## Desc
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+An interactive 3D experience built using React Three Fiber (R3F) and Three.js. The project showcases dynamic animations, smooth transitions, and responsive layouts optimized for various screen sizes. 
 
-## Expanding the ESLint configuration
+## Initial problem 
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+When manipulating hundreds of objects in 3D space, libraries (GSAP, React-Spring) create long tasks lasting up to 1000 ms. In this R3F demo, I solved the issue by using native Three.js methods, reserving spring animations for smaller, precise tasks. This reduced performance bottlenecks and ensured smooth, responsive interactions.
 
-- Configure the top-level `parserOptions` property like this:
+*While there are many examples of optimizing Three.js performance, similar resources for R3F are scarce.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Tech
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- React
+- TypeScript
+- React Three Fiber (R3F)
+- Three.js
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+[Link to the application](https://testing-stage-domain.tech/)
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+
