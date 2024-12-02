@@ -15,6 +15,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router";
+import { useSpring, animated, config } from "@react-spring/three";
 // import { useSpring, animated, config, useSprings } from "@react-spring/three";
 
 const images = [
@@ -110,19 +111,31 @@ function LazyLoadedImage({ src, alt }) {
 
 // @ts-expect-error вапва
 const ImagePlane = forwardRef(({ data, onClick }, ref) => {
+  const [active, setActive] = useState(false);
   const texture = useLoader(THREE.TextureLoader, data.lowres) as THREE.Texture;
 
+  const { scale } = useSpring({
+    scale: active ? 1.2 : 1,
+    config: config.wobbly,
+  });
+
   return (
-    <mesh
+    <animated.mesh
       // @ts-expect-error вапва
+
       ref={ref}
+      scale={scale}
       onClick={() => {
         onClick(data.hires);
+      }}
+      onPointerOver={(e) => {
+        setActive(!active);
+        e.stopPropagation();
       }}
     >
       <planeGeometry args={[1, 1]} />
       <meshBasicMaterial map={texture} />
-    </mesh>
+    </animated.mesh>
   );
 });
 
