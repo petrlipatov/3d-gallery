@@ -1,4 +1,6 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { DragControls } from "three/addons/controls/DragControls.js";
+
 import { OrbitControls, Loader } from "@react-three/drei";
 import * as THREE from "three";
 import s from "./app.module.css";
@@ -10,11 +12,14 @@ import {
   useRef,
   // memo,
   forwardRef,
+  // useImperativeHandle,
   // useLayoutEffect,
 } from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router";
 import { useSpring, animated, config } from "@react-spring/three";
+// import { useDrag } from "react-use-gesture";
+// import { useDrag, useGesture } from "react-use-gesture";
 // import { useSpring, animated, config, useSprings } from "@react-spring/three";
 
 const images = [
@@ -282,9 +287,91 @@ function LazyLoadedImage({ src, alt }) {
   return <img src={loadedSrc} alt={alt} className={s.image} />;
 }
 
+// const ImagePlane = forwardRef(
+
+//   ({ data, onClick, setIsControlsEnabled }, parentRef) => {
+//     const localRef = useRef<THREE.Mesh | null>(null); // Локальный реф
+//     const positionRef = useRef(new THREE.Vector3(0, 0, 0));
+//     const [isDragging, setIsDragging] = useState(false);
+//     const [active, setActive] = useState(false);
+//     const { size, viewport } = useThree();
+//     const aspect = size.width / viewport.width;
+//     const texture = useLoader(
+//       THREE.TextureLoader,
+//       data.lowres
+//     ) as THREE.Texture;
+
+//     const { scale } = useSpring({
+//       scale: active ? 1.2 : 1,
+//       config: config.wobbly,
+//     });
+
+//     useImperativeHandle(parentRef, () => localRef.current, [localRef]);
+
+//     const bind = useDrag(
+//       ({ offset: [x, y], first, last }) => {
+//         if (first) {
+//           setIsDragging(true);
+//           setIsControlsEnabled(false);
+//         }
+//         if (last) {
+//           setIsDragging(false);
+//           setIsControlsEnabled(true);
+//         }
+
+//         if (localRef.current) {
+//           const normalizedX = (x / size.width) * viewport.width;
+//           const normalizedY = -(y / size.height) * viewport.height;
+
+//           // Обновляем позицию объекта с учетом смещения
+//           localRef.current.position.set(
+//             normalizedX,
+//             normalizedY,
+//             localRef.current.position.z
+//           );
+//         }
+//       },
+//       { pointerEvents: true }
+//     );
+
+//     // useFrame(() => {
+//     //   if (localRef.current && isDragging) {
+//     //     localRef.current.position.set(
+//     //       positionRef.current.x,
+//     //       positionRef.current.y,
+//     //       positionRef.current.z
+//     //     );
+//     //   }
+//     // });
+//     return (
+//       <animated.mesh
+//         ref={localRef}
+//         scale={scale}
+//         {...bind()}
+//         onClick={() => {
+//           onClick(data.hires);
+//         }}
+//         onPointerOver={(e) => {
+//           setActive(true);
+//           setIsControlsEnabled(false);
+//           e.stopPropagation();
+//         }}
+//         onPointerOut={() => {
+//           setActive(false);
+//           setIsControlsEnabled(true);
+//         }}
+//       >
+//         <planeGeometry args={[1.39, 1]} />
+//         <meshBasicMaterial map={texture} />
+//       </animated.mesh>
+//     );
+//   }
+// );
+
 // @ts-expect-error вапва
-const ImagePlane = forwardRef(({ data, onClick }, ref) => {
+const ImagePlane = forwardRef(({ data, onClick, isDragging }, ref) => {
   const [active, setActive] = useState(false);
+
   const texture = useLoader(THREE.TextureLoader, data.lowres) as THREE.Texture;
 
   const { scale } = useSpring({
@@ -298,14 +385,20 @@ const ImagePlane = forwardRef(({ data, onClick }, ref) => {
 
       ref={ref}
       scale={scale}
-      onClick={() => {
-        onClick(data.hires);
-      }}
       onPointerOver={(e) => {
         setActive(!active);
         e.stopPropagation();
       }}
-      onPointerOut={() => setActive(!active)}
+      onPointerOut={() => {
+        setActive(!active);
+      }}
+      onClick={(e) => {
+        e.stopPropagation(); // Предотвращаем всплытие
+        if (!isDragging) {
+          // Только если не перетаскивается
+          onClick(data.hires); // Открываем картинку
+        }
+      }}
     >
       <planeGeometry args={[1.39, 1]} />
       <meshBasicMaterial map={texture} />
@@ -313,10 +406,24 @@ const ImagePlane = forwardRef(({ data, onClick }, ref) => {
   );
 });
 
-const CloudOfImages = ({ activeAnimation, onClick, randomCoordinates }) => {
+const CloudOfImages = ({
+  activeAnimation,
+  onClick,
+  randomCoordinates,
+  setIsControlsEnabled,
+  isAnimating,
+  setIsDragged,
+  isDragged,
+  // allAnimationsCompleted,
+  // setAllAnimationsCompleted,
+}) => {
   const refs = useRef([]);
+  const { camera, gl } = useThree(); // Получаем камеру и рендерер
 
   useFrame(() => {
+    if (!isAnimating) {
+      return;
+    }
     if (activeAnimation === "grid") {
       refs.current.forEach((ref, i) => {
         ref.position.lerp(
@@ -330,6 +437,7 @@ const CloudOfImages = ({ activeAnimation, onClick, randomCoordinates }) => {
       });
     } else if (activeAnimation === "shuffle") {
       refs.current.forEach((ref, i) => {
+        const targetPosition = randomCoordinates[i];
         ref.position.lerp(
           new THREE.Vector3(
             randomCoordinates[i][0],
@@ -338,9 +446,33 @@ const CloudOfImages = ({ activeAnimation, onClick, randomCoordinates }) => {
           ),
           0.05
         );
+        if (ref.position.distanceTo(targetPosition) > 0.01) {
+          console.log("animationCompleted", i);
+        }
       });
     }
   });
+
+  useEffect(() => {
+    if (isAnimating) {
+      return;
+    }
+    const dragControls = new DragControls(refs.current, camera, gl.domElement);
+
+    dragControls.addEventListener("drag", () => {
+      setIsDragged(true);
+      setIsControlsEnabled(false);
+    });
+
+    dragControls.addEventListener("dragend", () => {
+      setIsDragged(false);
+      setIsControlsEnabled(true);
+    });
+
+    return () => {
+      dragControls.dispose();
+    };
+  }, [camera, gl, setIsControlsEnabled, isAnimating, setIsDragged]);
 
   return (
     <>
@@ -356,6 +488,7 @@ const CloudOfImages = ({ activeAnimation, onClick, randomCoordinates }) => {
             ref={(el) => {
               refs.current[index] = el;
             }}
+            isDragged={isDragged}
           />
         );
       })}
@@ -365,18 +498,36 @@ const CloudOfImages = ({ activeAnimation, onClick, randomCoordinates }) => {
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeAnimation, setActiveAnimation] = useState("shuffle");
+
   const [randomCoordinates, setRandomCoordinate] = useState(null);
+  const [isControlsEnabled, setIsControlsEnabled] = useState(true);
+  const [activeAnimation, setActiveAnimation] = useState("shuffle");
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [isDragged, setIsDragged] = useState(false);
+
+  const animationTimerRef = useRef<number>();
+
+  const clearAnimationTimer = () => {
+    if (animationTimerRef.current) {
+      clearInterval(animationTimerRef.current);
+      animationTimerRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    setIsAnimating(true);
+    clearAnimationTimer();
+    animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
+    setRandomCoordinate(generateRandom());
+  }, []);
 
   const image = searchParams.get("image");
 
-  useEffect(() => {
-    const data = generateRandom();
-    console.log(data);
-    setRandomCoordinate(data);
-  }, []);
-
-  const openImage = (image) => setSearchParams({ image });
+  const openImage = (image) => {
+    if (!isDragged) {
+      setSearchParams({ image });
+    }
+  };
 
   const closeImage = (e: MouseEvent) => {
     setSearchParams({});
@@ -384,6 +535,10 @@ function App() {
   };
 
   const toggleShuffle = () => {
+    setIsAnimating(true);
+    clearAnimationTimer();
+    animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
+
     if (activeAnimation === "shuffle") {
       const data = generateRandom();
       setRandomCoordinate(data);
@@ -391,9 +546,15 @@ function App() {
     setActiveAnimation("shuffle");
   };
   const toggleByDate = () => {
+    setIsAnimating(true);
+    clearAnimationTimer();
+    animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
     setActiveAnimation("grid");
   };
   const toggleGrid = () => {
+    setIsAnimating(true);
+    clearAnimationTimer();
+    animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
     setActiveAnimation("grid");
   };
 
@@ -401,22 +562,27 @@ function App() {
     <div id="canvas-container" className={s.canvasContainer}>
       {image && <Popup image={image} onClose={closeImage} />}
 
-      <Canvas camera={{ fov: 75, position: [0, 0, 20] }}>
+      <Canvas camera={{ fov: 75, position: [0, 0, 15] }}>
         <Suspense fallback={null}>
           <CloudOfImages
             onClick={openImage}
             activeAnimation={activeAnimation}
             randomCoordinates={randomCoordinates}
+            setIsControlsEnabled={setIsControlsEnabled}
+            isAnimating={isAnimating}
+            setIsDragged={setIsDragged}
+            isDragged={isDragged}
           />
         </Suspense>
 
         <OrbitControls
+          enabled={isControlsEnabled}
           enableDamping
           enablePan
           zoomToCursor
           enableRotate={false}
           minDistance={-20}
-          maxDistance={25}
+          maxDistance={15}
           mouseButtons={{
             LEFT: THREE.MOUSE.PAN,
             MIDDLE: THREE.MOUSE.DOLLY,
