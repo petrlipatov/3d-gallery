@@ -307,7 +307,7 @@ const ImagePlane = forwardRef(({ data, onClick }, ref) => {
       }}
       onPointerOut={() => setActive(!active)}
     >
-      <planeGeometry args={[1, 1]} />
+      <planeGeometry args={[1.39, 1]} />
       <meshBasicMaterial map={texture} />
     </animated.mesh>
   );
