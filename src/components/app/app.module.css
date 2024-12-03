@@ -3,7 +3,7 @@
   width: 100vw;
   height: 100vh;
   background-color: black;
-  background: linear-gradient(45deg, #add8e6, #dfd19f);
+  /* background: linear-gradient(45deg, #add8e6, #dfd19f); */
 }
 
 .popup {
