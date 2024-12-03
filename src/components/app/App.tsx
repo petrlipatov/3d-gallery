@@ -257,7 +257,7 @@ const positionsGrid = generateGridPositions(images.length);
 
 function Popup({ image, onClose }) {
   return createPortal(
-    <div className={s.popup} onClick={onClose}>
+    <div className={s.popup} onClick={onClose} onTouchStart={onClose}>
       <div className={s.popupContent}>
         <LazyLoadedImage src={image} alt="Selected" />
       </div>
@@ -276,7 +276,7 @@ function LazyLoadedImage({ src, alt }) {
   }, [src]);
 
   if (!loadedSrc) {
-    return <div className={s.loader}>loading</div>;
+    return <span className={s.loader}>loading</span>;
   }
 
   return <img src={loadedSrc} alt={alt} className={s.image} />;
@@ -377,7 +377,11 @@ function App() {
   }, []);
 
   const openImage = (image) => setSearchParams({ image });
-  const closeImage = () => setSearchParams({});
+
+  const closeImage = (e: MouseEvent) => {
+    setSearchParams({});
+    e.stopPropagation();
+  };
 
   const toggleShuffle = () => {
     if (activeAnimation === "shuffle") {
