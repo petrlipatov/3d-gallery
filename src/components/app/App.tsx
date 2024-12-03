@@ -131,6 +131,7 @@ const ImagePlane = forwardRef(({ data, onClick }, ref) => {
         setActive(!active);
         e.stopPropagation();
       }}
+      onPointerOut={() => setActive(!active)}
     >
       <planeGeometry args={[1, 1]} />
       <meshBasicMaterial map={texture} />
