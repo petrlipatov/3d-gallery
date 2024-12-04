@@ -470,6 +470,8 @@ const CloudOfImages = ({
     });
 
     return () => {
+      // dragControls.removeEventListener("drag", onDrag);
+      // dragControls.removeEventListener("dragend", onDragEnd);
       dragControls.dispose();
     };
   }, [camera, gl, setIsControlsEnabled, isAnimating, setIsDragged]);
