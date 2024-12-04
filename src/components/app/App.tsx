@@ -12,7 +12,6 @@ import {
   useRef,
   // memo,
   forwardRef,
-  createContext,
   // useImperativeHandle,
   // useLayoutEffect,
 } from "react";
@@ -160,7 +159,6 @@ const CloudOfImages = ({
       });
     } else if (activeAnimation === "shuffle") {
       refs.current.forEach((ref, i) => {
-        const targetPosition = randomCoordinates[i];
         ref.position.lerp(
           new THREE.Vector3(
             randomCoordinates[i][0],
@@ -169,9 +167,6 @@ const CloudOfImages = ({
           ),
           0.05
         );
-        if (ref.position.distanceTo(targetPosition) > 0.01) {
-          console.log("animationCompleted", i);
-        }
       });
     }
   });
@@ -182,8 +177,11 @@ const CloudOfImages = ({
     }
     const dragControls = new DragControls(refs.current, camera, gl.domElement);
 
+    console.log(dragControls);
     dragControls.addEventListener("drag", () => {
-      setIsDragged(true);
+      setTimeout(() => {
+        setIsDragged(true);
+      }, 100);
       setIsControlsEnabled(false);
     });
 
@@ -251,7 +249,6 @@ function Scene() {
   const isMobile = width < 768;
 
   const openImage = (image) => {
-    console.log(isMobile);
     if (!isDragged) {
       setSearchParams({ image });
     }
