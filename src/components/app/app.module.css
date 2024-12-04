@@ -61,6 +61,11 @@
   }
 }
 
+.button {
+  /* border: none;
+  box-shadow: 0 0 30px 5px #fff, 0 0 16px 3px #f0f, 0 0 215px 9px #0ff; */
+}
+
 .loader {
   width: 48px;
   height: 48px;
