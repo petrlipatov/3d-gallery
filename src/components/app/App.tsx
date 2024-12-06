@@ -138,7 +138,8 @@ const CloudOfImages = ({
   isDragged,
 }) => {
   const refs = useRef([]);
-  const { camera, gl } = useThree(); // Получаем камеру и рендерер
+  const { camera, gl } = useThree();
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
   useFrame(() => {
     if (!isAnimating) {
@@ -166,6 +167,29 @@ const CloudOfImages = ({
           0.05
         );
       });
+    } else if (activeAnimation === "random") {
+      if (selectedIndex !== null) {
+        const selected = refs.current[selectedIndex];
+        if (selected) {
+          const targetPosition = camera.position
+            .clone()
+            .add(
+              camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(2)
+            );
+          selected.position.lerp(targetPosition, 0.09);
+
+          refs.current.forEach((ref, i) => {
+            if (i !== selectedIndex) {
+              const targetPosition = ref.position.clone() as THREE.Vector3;
+
+              targetPosition.setZ(15);
+              targetPosition.add(new THREE.Vector3(0, 1, 0));
+
+              ref.position.lerp(targetPosition, 0.1);
+            }
+          });
+        }
+      }
     }
   });
 
@@ -194,6 +218,18 @@ const CloudOfImages = ({
     };
   }, [camera, gl, setIsControlsEnabled, isAnimating, setIsDragged]);
 
+  const handleRandomize = () => {
+    // Проверяем, не в анимации ли мы
+    const randomIndex = Math.floor(Math.random() * randomCoordinates.length);
+    setSelectedIndex(randomIndex);
+  };
+
+  useEffect(() => {
+    if (activeAnimation === "random") {
+      handleRandomize();
+    }
+  }, [activeAnimation, isAnimating]);
+
   return (
     <>
       {randomCoordinates.map((_, index) => {
@@ -217,7 +253,6 @@ const CloudOfImages = ({
 
 function CanvasScene() {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const [randomCoordinates, setRandomCoordinate] = useState(null);
   const [isControlsEnabled, setIsControlsEnabled] = useState(true);
   const [activeAnimation, setActiveAnimation] = useState("shuffle");
@@ -226,6 +261,19 @@ function CanvasScene() {
 
   const animationTimerRef = useRef<number>();
   const { width } = useViewport();
+
+  const triggerRandomAnimation = () => {
+    if (isAnimating) {
+      return;
+    }
+    setIsAnimating(true);
+    clearAnimationTimer();
+    animationTimerRef.current = setInterval(() => {
+      setIsAnimating(false);
+      setActiveAnimation(null);
+    }, 4000);
+    setActiveAnimation("random");
+  };
 
   const clearAnimationTimer = () => {
     if (animationTimerRef.current) {
@@ -260,7 +308,6 @@ function CanvasScene() {
     setIsAnimating(true);
     clearAnimationTimer();
     animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
-
     if (activeAnimation === "shuffle") {
       const data = generateRandom();
       setRandomCoordinate(data);
@@ -268,12 +315,6 @@ function CanvasScene() {
     setActiveAnimation("shuffle");
   };
   const toggleByDate = () => {
-    setIsAnimating(true);
-    clearAnimationTimer();
-    animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
-    setActiveAnimation("grid");
-  };
-  const toggleGrid = () => {
     setIsAnimating(true);
     clearAnimationTimer();
     animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
@@ -320,7 +361,7 @@ function CanvasScene() {
           shuffle
         </button>
         <button onClick={toggleByDate}>by date</button>
-        <button onClick={toggleGrid}>random</button>
+        <button onClick={triggerRandomAnimation}>random</button>
       </div>
     </div>
   );
