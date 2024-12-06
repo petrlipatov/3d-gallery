@@ -136,8 +136,6 @@ const CloudOfImages = ({
   isAnimating,
   setIsDragged,
   isDragged,
-  // allAnimationsCompleted,
-  // setAllAnimationsCompleted,
 }) => {
   const refs = useRef([]);
   const { camera, gl } = useThree(); // Получаем камеру и рендерер
@@ -177,7 +175,6 @@ const CloudOfImages = ({
     }
     const dragControls = new DragControls(refs.current, camera, gl.domElement);
 
-    console.log(dragControls);
     dragControls.addEventListener("drag", () => {
       setTimeout(() => {
         setIsDragged(true);
@@ -218,7 +215,7 @@ const CloudOfImages = ({
   );
 };
 
-function Scene() {
+function CanvasScene() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [randomCoordinates, setRandomCoordinate] = useState(null);
@@ -323,7 +320,7 @@ function Scene() {
           shuffle
         </button>
         <button onClick={toggleByDate}>by date</button>
-        <button onClick={toggleGrid}>grid</button>
+        <button onClick={toggleGrid}>random</button>
       </div>
     </div>
   );
@@ -332,7 +329,7 @@ function Scene() {
 function App() {
   return (
     <ViewportProvider>
-      <Scene />
+      <CanvasScene />
     </ViewportProvider>
   );
 }
