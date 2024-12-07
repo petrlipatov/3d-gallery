@@ -275,7 +275,7 @@ function CanvasScene() {
     animationTimerRef.current = setInterval(() => {
       setIsAnimating(false);
       setActiveAnimation(null);
-    }, 4000);
+    }, 3000);
     setActiveAnimation("random");
   };
 
@@ -361,11 +361,32 @@ function CanvasScene() {
       </Canvas>
       <Loader />
       <div className={s.controlsContainer}>
-        <button className={s.button} onClick={toggleShuffle}>
+        <button
+          className={`${s.button} ${
+            isAnimating && activeAnimation === "shuffle"
+              ? s.buttonAnimation
+              : ""
+          }`}
+          onClick={toggleShuffle}
+        >
           shuffle
         </button>
-        <button onClick={toggleByDate}>by date</button>
-        <button onClick={triggerRandomAnimation}>random</button>
+        <button
+          className={`${s.button} ${
+            isAnimating && activeAnimation === "grid" ? s.buttonAnimation : ""
+          }`}
+          onClick={toggleByDate}
+        >
+          by date
+        </button>
+        <button
+          className={`${s.button} ${
+            isAnimating && activeAnimation === "random" ? s.buttonAnimation : ""
+          }`}
+          onClick={triggerRandomAnimation}
+        >
+          random
+        </button>
       </div>
     </div>
   );
