@@ -68,7 +68,7 @@
 }
 
 .buttonAnimation {
-  animation: glow 3s forwards; /* 1 секунда анимации, остается на конечном состоянии */
+  animation: glow 3s forwards;
 }
 
 @keyframes glow {
@@ -76,7 +76,7 @@
     box-shadow: 0 0 0 0 #fff, 0 0 0 0 #f0f, 0 0 0 0 #0ff;
   }
   50% {
-    box-shadow: 0 0 30px 5px #fff, 0 0 16px 3px #f0f, 0 0 215px 9px #0ff;
+    box-shadow: 0 0 30px 5px #fff, 0 0 150px 9px #f0f, 0 0 215px 9px #0ff;
   }
   100% {
     box-shadow: 0 0 0 0 #fff, 0 0 0 0 #f0f, 0 0 0 0 #0ff;
