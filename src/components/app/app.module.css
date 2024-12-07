@@ -62,6 +62,7 @@
 }
 
 .button {
+  -webkit-appearance: none;
   white-space: nowrap;
   transition: box-shadow 0.3s ease-in-out; /* Для плавного исчезновения */
 }
