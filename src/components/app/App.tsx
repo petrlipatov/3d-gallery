@@ -141,6 +141,10 @@ const CloudOfImages = ({
   const { camera, gl } = useThree();
   const [selectedIndex, setSelectedIndex] = useState(null);
 
+  const { width } = useViewport();
+
+  const farAway = width < 768 ? 20 : 15;
+
   useFrame(() => {
     if (!isAnimating) {
       return;
@@ -182,7 +186,7 @@ const CloudOfImages = ({
             if (i !== selectedIndex) {
               const targetPosition = ref.position.clone() as THREE.Vector3;
 
-              targetPosition.setZ(15);
+              targetPosition.setZ(farAway);
               targetPosition.add(new THREE.Vector3(0, 1, 0));
 
               ref.position.lerp(targetPosition, 0.1);
