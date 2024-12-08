@@ -23,6 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-/public/previews
-/public/previews-big
+/public/previews-mobile
+/public/previews-desktop
 /public/images

@@ -160,7 +160,13 @@ function LazyLoadedImage({ src, alt }) {
 const ImagePlane = forwardRef(({ data, onClick, isDragging }, ref) => {
   const [active, setActive] = useState(false);
 
-  const texture = useLoader(THREE.TextureLoader, data.lowres) as THREE.Texture;
+  const { width } = useViewport();
+  const isMobile = width < 768;
+
+  const texture = useLoader(
+    THREE.TextureLoader,
+    isMobile ? data.lowresMobile : data.lowresDesktop
+  ) as THREE.Texture;
 
   const { scale } = useSpring({
     scale: active ? 1.2 : 1,
