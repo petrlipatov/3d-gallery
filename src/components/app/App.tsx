@@ -1,7 +1,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { DragControls } from "three/addons/controls/DragControls.js";
 
-import { OrbitControls, Loader, Text3D } from "@react-three/drei";
+import { OrbitControls, Loader } from "@react-three/drei";
 import * as THREE from "three";
 import s from "./app.module.css";
 import { useLoader } from "@react-three/fiber";

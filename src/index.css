@@ -1,5 +1,6 @@
 :root {
   background-color: #242424;
+  overflow: hidden;
 }
 
 a {
@@ -13,4 +14,5 @@ a:hover {
 
 body {
   margin: 0;
+  overflow: hidden;
 }
