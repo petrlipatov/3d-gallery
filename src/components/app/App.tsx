@@ -338,6 +338,17 @@ function CanvasScene() {
   const animationTimerRef = useRef<number>();
   const { width } = useViewport();
 
+  useEffect(() => {
+    setIsAnimating(true);
+    clearAnimationTimer();
+
+    animationTimerRef.current = setInterval(() => {
+      setIsAnimating(false);
+      console.log("false");
+    }, 4000);
+    setRandomCoordinate(generateRandom());
+  }, []);
+
   const triggerRandomAnimation = () => {
     setIsAnimating(true);
     clearAnimationTimer();
@@ -354,13 +365,6 @@ function CanvasScene() {
       animationTimerRef.current = null;
     }
   };
-
-  useEffect(() => {
-    setIsAnimating(true);
-    clearAnimationTimer();
-    animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
-    setRandomCoordinate(generateRandom());
-  }, []);
 
   const image = searchParams.get("image");
 
