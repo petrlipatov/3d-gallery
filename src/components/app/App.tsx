@@ -1,7 +1,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { DragControls } from "three/addons/controls/DragControls.js";
 
-import { OrbitControls, Loader } from "@react-three/drei";
+import { OrbitControls, Loader, Text3D } from "@react-three/drei";
 import * as THREE from "three";
 import s from "./app.module.css";
 import { useLoader } from "@react-three/fiber";
@@ -89,6 +89,72 @@ function LazyLoadedImage({ src, alt }) {
 
   return <img src={loadedSrc} alt={alt} className={s.image} />;
 }
+
+// const CenteredText = () => {
+//   const textRef = useRef();
+
+//   useEffect(() => {
+//     if (textRef.current) {
+//       textRef.current.geometry.computeBoundingBox();
+//       const bbox = textRef.current.geometry.boundingBox;
+//       const xOffset = -(bbox.max.x - bbox.min.x) / 2; // Центрируем по X
+//       const yOffset = -(bbox.max.y - bbox.min.y) / 2; // Центрируем по Y
+//       const zOffset = -(bbox.max.z - bbox.min.z) / 2; // Центрируем по Z (если нужно)
+//       textRef.current.position.set(xOffset, yOffset, zOffset);
+//     }
+//   }, []);
+
+//   return (
+//     <Text3D
+//       ref={textRef}
+//       curveSegments={32}
+//       bevelEnabled
+//       bevelSize={0.04}
+//       bevelThickness={0.1}
+//       height={0.5}
+//       lineHeight={1}
+//       letterSpacing={-0.06}
+//       size={1}
+//       font="/Inter_Bold.json"
+//     >
+//       {`stepanlipatov@gmail.com\ninstagram.com/s7epa`}
+//       <meshNormalMaterial />
+//     </Text3D>
+//   );
+// };
+
+// const AnimatedText3D = animated(Text3D);
+
+// const CenteredText = () => {
+//   const [toggle, setToggle] = useState(false);
+
+//   // Анимация морфинга
+//   const { scale, size } = useSpring({
+//     scale: toggle ? 1.5 : 1,
+//     size: toggle ? 1.2 : 1,
+//     config: { tension: 150, friction: 12 },
+//   });
+
+//   return (
+//     <group onClick={() => setToggle(!toggle)}>
+//       <AnimatedText3D
+//         curveSegments={32}
+//         bevelEnabled
+//         bevelSize={0.04}
+//         bevelThickness={0.1}
+//         height={0.5}
+//         lineHeight={1}
+//         letterSpacing={-0.06}
+//         size={size}
+//         font="/Inter_Bold.json"
+//         scale={scale.to((s) => [s, s, s])}
+//       >
+//         {`Морфинг`}
+//         <meshStandardMaterial />
+//       </AnimatedText3D>
+//     </group>
+//   );
+// };
 
 // @ts-expect-error вапва
 const ImagePlane = forwardRef(({ data, onClick, isDragging }, ref) => {
@@ -267,9 +333,6 @@ function CanvasScene() {
   const { width } = useViewport();
 
   const triggerRandomAnimation = () => {
-    if (isAnimating) {
-      return;
-    }
     setIsAnimating(true);
     clearAnimationTimer();
     animationTimerRef.current = setInterval(() => {
@@ -340,7 +403,8 @@ function CanvasScene() {
             isDragged={isDragged}
           />
         </Suspense>
-
+        {/* <CenteredText /> */}
+        <ambientLight intensity={0.5} /> {/* Общее освещение */}
         <OrbitControls
           enabled={isControlsEnabled}
           enableDamping

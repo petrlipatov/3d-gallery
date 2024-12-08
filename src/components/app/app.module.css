@@ -64,23 +64,11 @@
 .button {
   -webkit-appearance: none;
   white-space: nowrap;
-  transition: box-shadow 0.3s ease-in-out; /* Для плавного исчезновения */
 }
 
 .buttonAnimation {
-  animation: glow 3s forwards;
-}
-
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 0 0 #fff, 0 0 0 0 #f0f, 0 0 0 0 #0ff;
-  }
-  50% {
-    box-shadow: 0 0 30px 5px #fff, 0 0 150px 9px #f0f, 0 0 215px 9px #0ff;
-  }
-  100% {
-    box-shadow: 0 0 0 0 #fff, 0 0 0 0 #f0f, 0 0 0 0 #0ff;
-  }
+  cursor: wait;
+  background-color: black;
 }
 
 .loader {
