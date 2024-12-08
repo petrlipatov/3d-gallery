@@ -1,7 +1,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { DragControls } from "three/addons/controls/DragControls.js";
 
-import { OrbitControls, Loader } from "@react-three/drei";
+import { OrbitControls, Loader, useProgress } from "@react-three/drei";
 import * as THREE from "three";
 import s from "./app.module.css";
 import { useLoader } from "@react-three/fiber";
@@ -338,16 +338,20 @@ function CanvasScene() {
   const animationTimerRef = useRef<number>();
   const { width } = useViewport();
 
-  useEffect(() => {
-    setIsAnimating(true);
-    clearAnimationTimer();
+  const { loaded, total } = useProgress();
 
-    animationTimerRef.current = setInterval(() => {
-      setIsAnimating(false);
-      console.log("false");
-    }, 4000);
-    setRandomCoordinate(generateRandom());
-  }, []);
+  useEffect(() => {
+    if (loaded === total) {
+      setIsAnimating(true);
+      clearAnimationTimer();
+
+      animationTimerRef.current = setInterval(() => {
+        setIsAnimating(false);
+        console.log("false");
+      }, 4000);
+      setRandomCoordinate(generateRandom());
+    }
+  }, [loaded, total]);
 
   const triggerRandomAnimation = () => {
     setIsAnimating(true);
