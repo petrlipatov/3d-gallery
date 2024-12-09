@@ -64,11 +64,15 @@
 .button {
   -webkit-appearance: none;
   white-space: nowrap;
+  border: none;
+  height: 24px;
+  width: 70px;
 }
 
 .buttonAnimation {
   cursor: wait;
-  background-color: black;
+  background-color: transparent;
+  color: transparent;
 }
 
 .loader {

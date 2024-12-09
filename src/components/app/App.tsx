@@ -97,18 +97,15 @@ const Contacts = ({ activeAnimation }) => {
         .copy(camera.position)
         .add(direction.multiplyScalar(10));
 
-      // @ts-expect-error вапва
-
-      meshRef.current.fillOpacity = 0;
+      // meshRef.current.fillOpacity = 0;
       console.log(meshRef.current);
       // @ts-expect-error вапва
 
       meshRef.current.position.copy(offsetPosition);
     }
-    // @ts-expect-error вапва
 
-    const timeout = setTimeout(() => (meshRef.current.fillOpacity = 1), 500);
-    return () => clearTimeout(timeout);
+    // const timeout = setTimeout(() => (meshRef.current.fillOpacity = 1), 500);
+    // return () => clearTimeout(timeout);
   }, [activeAnimation]);
 
   if (activeAnimation !== "whomi") return null;
