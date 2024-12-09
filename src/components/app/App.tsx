@@ -5,14 +5,7 @@ import { OrbitControls, Loader, useProgress, Text } from "@react-three/drei";
 import * as THREE from "three";
 import s from "./app.module.css";
 import { useLoader } from "@react-three/fiber";
-import {
-  useEffect,
-  Suspense,
-  useState,
-  useRef,
-  forwardRef,
-  useMemo,
-} from "react";
+import { useEffect, Suspense, useState, useRef, forwardRef } from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router";
 import { useSpring, animated, config } from "@react-spring/three";
@@ -104,10 +97,15 @@ const Contacts = ({ activeAnimation }) => {
         .copy(camera.position)
         .add(direction.multiplyScalar(10));
 
+      // @ts-expect-error вапва
+
       meshRef.current.fillOpacity = 0;
       console.log(meshRef.current);
+      // @ts-expect-error вапва
+
       meshRef.current.position.copy(offsetPosition);
     }
+    // @ts-expect-error вапва
 
     const timeout = setTimeout(() => (meshRef.current.fillOpacity = 1), 500);
     return () => clearTimeout(timeout);
@@ -152,12 +150,7 @@ const TextsCloud = ({ activeAnimation }) => {
   if (activeAnimation !== "shuffle") return null;
 
   return TEXTS.map((el, index) => (
-    <AnimatedText
-      key={el}
-      text={el}
-      position={textPositions[index]}
-      activeAnimation={activeAnimation}
-    />
+    <AnimatedText key={el} text={el} position={textPositions[index]} />
   ));
 };
 
