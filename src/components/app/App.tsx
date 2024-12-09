@@ -1,7 +1,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { DragControls } from "three/addons/controls/DragControls.js";
 
-import { OrbitControls, Loader, useProgress } from "@react-three/drei";
+import { OrbitControls, Loader, useProgress, Text } from "@react-three/drei";
 import * as THREE from "three";
 import s from "./app.module.css";
 import { useLoader } from "@react-three/fiber";
@@ -10,10 +10,8 @@ import {
   Suspense,
   useState,
   useRef,
-  // memo,
   forwardRef,
-  // useImperativeHandle,
-  // useLayoutEffect,
+  useMemo,
 } from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router";
@@ -21,9 +19,10 @@ import { useSpring, animated, config } from "@react-spring/three";
 import { IMAGES } from "../../shared/constants";
 import { ViewportProvider } from "./providers/viewport-provider";
 import { useViewport } from "../../shared/hooks/useViewport";
+import { TEXTS } from "../../shared/constants/data";
 
-function generateRandom() {
-  return Array.from({ length: IMAGES.length }, () => {
+function generateRandom(len) {
+  return Array.from({ length: len }, () => {
     const spacing = 1.5;
 
     const angle = Math.random() * Math.PI * 2;
@@ -90,71 +89,52 @@ function LazyLoadedImage({ src, alt }) {
   return <img src={loadedSrc} alt={alt} className={s.image} />;
 }
 
-// const CenteredText = () => {
-//   const textRef = useRef();
+const textPositions = generateRandom(TEXTS.length);
 
-//   useEffect(() => {
-//     if (textRef.current) {
-//       textRef.current.geometry.computeBoundingBox();
-//       const bbox = textRef.current.geometry.boundingBox;
-//       const xOffset = -(bbox.max.x - bbox.min.x) / 2; // Центрируем по X
-//       const yOffset = -(bbox.max.y - bbox.min.y) / 2; // Центрируем по Y
-//       const zOffset = -(bbox.max.z - bbox.min.z) / 2; // Центрируем по Z (если нужно)
-//       textRef.current.position.set(xOffset, yOffset, zOffset);
-//     }
-//   }, []);
+const AnimatedText = ({ text, position, activeAnimation }) => {
+  const meshRef = useRef();
 
-//   return (
-//     <Text3D
-//       ref={textRef}
-//       curveSegments={32}
-//       bevelEnabled
-//       bevelSize={0.04}
-//       bevelThickness={0.1}
-//       height={0.5}
-//       lineHeight={1}
-//       letterSpacing={-0.06}
-//       size={1}
-//       font="/Inter_Bold.json"
-//     >
-//       {`stepanlipatov@gmail.com\ninstagram.com/s7epa`}
-//       <meshNormalMaterial />
-//     </Text3D>
-//   );
-// };
+  // const randomNumber = useMemo(() => Math.random(), []);
 
-// const AnimatedText3D = animated(Text3D);
+  // useFrame((state) => {
+  //   if (meshRef.current) {
+  //     const currentPosition = meshRef.current.position;
+  //     const time = state.clock.elapsedTime;
 
-// const CenteredText = () => {
-//   const [toggle, setToggle] = useState(false);
+  //     // Вычисляем цель для колебаний (синусоиды)
+  //     const targetY = Math.sin(time * randomNumber * 0.1) * 0.05;
 
-//   // Анимация морфинга
-//   const { scale, size } = useSpring({
-//     scale: toggle ? 1.5 : 1,
-//     size: toggle ? 1.2 : 1,
-//     config: { tension: 150, friction: 12 },
-//   });
+  //     // Плавное изменение текущей позиции с помощью lerp
+  //     currentPosition.y = THREE.MathUtils.lerp(currentPosition.y, targetY, 0.1);
+  //   }
+  // });
 
-//   return (
-//     <group onClick={() => setToggle(!toggle)}>
-//       <AnimatedText3D
-//         curveSegments={32}
-//         bevelEnabled
-//         bevelSize={0.04}
-//         bevelThickness={0.1}
-//         height={0.5}
-//         lineHeight={1}
-//         letterSpacing={-0.06}
-//         size={size}
-//         font="/Inter_Bold.json"
-//         scale={scale.to((s) => [s, s, s])}
-//       >
-//         {`Морфинг`}
-//         <meshStandardMaterial />
-//       </AnimatedText3D>
-//     </group>
-//   );
-// };
+  if (activeAnimation !== "shuffle") return null;
+
+  return (
+    <Text
+      position={new THREE.Vector3(position[0], position[1], position[2])}
+      ref={meshRef}
+      fontSize={0.1}
+      color="white"
+      anchorX="center"
+      anchorY="middle"
+      key={text}
+    >
+      {text}
+    </Text>
+  );
+};
+
+const TextsCloud = ({ activeAnimation }) => {
+  return TEXTS.map((el, index) => (
+    <AnimatedText
+      text={el}
+      position={textPositions[index]}
+      activeAnimation={activeAnimation}
+    />
+  ));
+};
 
 // @ts-expect-error вапва
 const ImagePlane = forwardRef(({ data, onClick, isDragging }, ref) => {
@@ -348,7 +328,7 @@ function CanvasScene() {
         setIsAnimating(false);
         console.log("false");
       }, 4000);
-      setRandomCoordinate(generateRandom());
+      setRandomCoordinate(generateRandom(IMAGES.length));
     }
   }, [loaded, total]);
 
@@ -389,7 +369,7 @@ function CanvasScene() {
     clearAnimationTimer();
     animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
     if (activeAnimation === "shuffle") {
-      const data = generateRandom();
+      const data = generateRandom(IMAGES.length);
       setRandomCoordinate(data);
     }
     setActiveAnimation("shuffle");
@@ -415,7 +395,9 @@ function CanvasScene() {
             setIsDragged={setIsDragged}
             isDragged={isDragged}
           />
+          <TextsCloud activeAnimation={activeAnimation} />
         </Suspense>
+
         <OrbitControls
           enabled={isControlsEnabled}
           enableDamping
