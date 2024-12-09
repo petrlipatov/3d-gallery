@@ -246,6 +246,15 @@ const CloudOfImages = ({
           });
         }
       }
+    } else if (activeAnimation === "whomi") {
+      refs.current.forEach((ref) => {
+        const targetPosition = ref.position.clone() as THREE.Vector3;
+
+        targetPosition.setZ(farAway);
+        targetPosition.add(new THREE.Vector3(0, 1, 0));
+
+        ref.position.lerp(targetPosition, 0.1);
+      });
     }
   });
 
@@ -332,6 +341,15 @@ function CanvasScene() {
     }
   }, [loaded, total]);
 
+  const triggerWhomiAnimation = () => {
+    setIsAnimating(true);
+    clearAnimationTimer();
+    animationTimerRef.current = setInterval(() => {
+      setIsAnimating(false);
+    }, 3000);
+    setActiveAnimation("whomi");
+  };
+
   const triggerRandomAnimation = () => {
     setIsAnimating(true);
     clearAnimationTimer();
@@ -417,7 +435,21 @@ function CanvasScene() {
         />
       </Canvas>
       <Loader />
+      {activeAnimation === "whomi" && (
+        <div className={s.contactsContainer}>
+          <p>Stepan Lipatov</p>
+          <p>stepanlipatov@gmail.com</p>
+        </div>
+      )}
       <div className={s.controlsContainer}>
+        <button
+          className={`${s.button} ${
+            isAnimating && activeAnimation === "random" ? s.buttonAnimation : ""
+          }`}
+          onClick={triggerRandomAnimation}
+        >
+          random
+        </button>
         <button
           className={`${s.button} ${
             isAnimating && activeAnimation === "shuffle"
@@ -436,13 +468,14 @@ function CanvasScene() {
         >
           by date
         </button>
+
         <button
           className={`${s.button} ${
-            isAnimating && activeAnimation === "random" ? s.buttonAnimation : ""
+            isAnimating && activeAnimation === "about" ? s.buttonAnimation : ""
           }`}
-          onClick={triggerRandomAnimation}
+          onClick={triggerWhomiAnimation}
         >
-          random
+          whomi
         </button>
       </div>
     </div>
