@@ -163,9 +163,11 @@ const ImagePlane = forwardRef(({ data, onClick, isDragging }, ref) => {
   const { width } = useViewport();
   const isMobile = width < 768;
 
+  const { lowresMobile, lowresDesktop } = data;
+
   const texture = useLoader(
     THREE.TextureLoader,
-    isMobile ? data.lowresMobile : data.lowresDesktop
+    isMobile ? lowresMobile : lowresDesktop
   ) as THREE.Texture;
 
   const { scale } = useSpring({
@@ -187,10 +189,9 @@ const ImagePlane = forwardRef(({ data, onClick, isDragging }, ref) => {
         setActive(!active);
       }}
       onClick={(e) => {
-        e.stopPropagation(); // Предотвращаем всплытие
+        e.stopPropagation();
         if (!isDragging) {
-          // Только если не перетаскивается
-          onClick(data.hires); // Открываем картинку
+          onClick(data.hires);
         }
       }}
     >
@@ -214,7 +215,6 @@ const CloudOfImages = ({
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   const { width } = useViewport();
-
   const farAway = width < 768 ? 20 : 15;
 
   useFrame(() => {
@@ -229,7 +229,7 @@ const CloudOfImages = ({
             positionsGrid[i][1],
             positionsGrid[i][2]
           ),
-          0.05
+          0.08
         );
       });
     } else if (activeAnimation === "shuffle") {
@@ -295,7 +295,6 @@ const CloudOfImages = ({
   }, [camera, gl, setIsControlsEnabled, isAnimating, setIsDragged]);
 
   const handleRandomize = () => {
-    // Проверяем, не в анимации ли мы
     const randomIndex = Math.floor(Math.random() * randomCoordinates.length);
     setSelectedIndex(randomIndex);
   };
@@ -417,8 +416,6 @@ function CanvasScene() {
             isDragged={isDragged}
           />
         </Suspense>
-        {/* <CenteredText /> */}
-        <ambientLight intensity={0.5} /> {/* Общее освещение */}
         <OrbitControls
           enabled={isControlsEnabled}
           enableDamping
