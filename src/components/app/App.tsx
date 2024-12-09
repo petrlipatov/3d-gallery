@@ -91,25 +91,48 @@ function LazyLoadedImage({ src, alt }) {
 
 const textPositions = generateRandom(TEXTS.length);
 
-const AnimatedText = ({ text, position, activeAnimation }) => {
+const Contacts = ({ activeAnimation }) => {
+  const { camera } = useThree();
   const meshRef = useRef();
 
-  // const randomNumber = useMemo(() => Math.random(), []);
+  useEffect(() => {
+    if (activeAnimation === "whomi" && meshRef.current) {
+      const direction = new THREE.Vector3();
+      camera.getWorldDirection(direction);
 
-  // useFrame((state) => {
-  //   if (meshRef.current) {
-  //     const currentPosition = meshRef.current.position;
-  //     const time = state.clock.elapsedTime;
+      const offsetPosition = new THREE.Vector3()
+        .copy(camera.position)
+        .add(direction.multiplyScalar(10));
 
-  //     // Вычисляем цель для колебаний (синусоиды)
-  //     const targetY = Math.sin(time * randomNumber * 0.1) * 0.05;
+      meshRef.current.fillOpacity = 0;
+      console.log(meshRef.current);
+      meshRef.current.position.copy(offsetPosition);
+    }
 
-  //     // Плавное изменение текущей позиции с помощью lerp
-  //     currentPosition.y = THREE.MathUtils.lerp(currentPosition.y, targetY, 0.1);
-  //   }
-  // });
+    const timeout = setTimeout(() => (meshRef.current.fillOpacity = 1), 500);
+    return () => clearTimeout(timeout);
+  }, [activeAnimation]);
 
-  if (activeAnimation !== "shuffle") return null;
+  if (activeAnimation !== "whomi") return null;
+
+  return (
+    <Text
+      ref={meshRef}
+      fontSize={0.5}
+      color="white"
+      anchorX="center"
+      anchorY="middle"
+      lineHeight={1.5}
+    >
+      Stepan Lipatov
+      {"\n"}
+      stepanlipatov@gmail.com
+    </Text>
+  );
+};
+
+const AnimatedText = ({ text, position }) => {
+  const meshRef = useRef();
 
   return (
     <Text
@@ -119,7 +142,6 @@ const AnimatedText = ({ text, position, activeAnimation }) => {
       color="white"
       anchorX="center"
       anchorY="middle"
-      key={text}
     >
       {text}
     </Text>
@@ -127,8 +149,11 @@ const AnimatedText = ({ text, position, activeAnimation }) => {
 };
 
 const TextsCloud = ({ activeAnimation }) => {
+  if (activeAnimation !== "shuffle") return null;
+
   return TEXTS.map((el, index) => (
     <AnimatedText
+      key={el}
       text={el}
       position={textPositions[index]}
       activeAnimation={activeAnimation}
@@ -332,10 +357,8 @@ function CanvasScene() {
     if (loaded === total) {
       setIsAnimating(true);
       clearAnimationTimer();
-
       animationTimerRef.current = setInterval(() => {
         setIsAnimating(false);
-        console.log("false");
       }, 4000);
       setRandomCoordinate(generateRandom(IMAGES.length));
     }
@@ -416,6 +439,8 @@ function CanvasScene() {
           <TextsCloud activeAnimation={activeAnimation} />
         </Suspense>
 
+        <Contacts activeAnimation={activeAnimation} />
+
         <OrbitControls
           enabled={isControlsEnabled}
           enableDamping
@@ -435,12 +460,14 @@ function CanvasScene() {
         />
       </Canvas>
       <Loader />
-      {activeAnimation === "whomi" && (
-        <div className={s.contactsContainer}>
-          <p>Stepan Lipatov</p>
-          <p>stepanlipatov@gmail.com</p>
-        </div>
-      )}
+      {/* <div
+        className={`${s.contactsContainer} ${
+          activeAnimation === "whomi" ? s.visible : ""
+        }`}
+      >
+        <p>Stepan Lipatov</p>
+        <p>stepanlipatov@gmail.com</p>
+      </div> */}
       <div className={s.controlsContainer}>
         <button
           className={`${s.button} ${
@@ -466,12 +493,12 @@ function CanvasScene() {
           }`}
           onClick={toggleByDate}
         >
-          by date
+          grid
         </button>
 
         <button
           className={`${s.button} ${
-            isAnimating && activeAnimation === "about" ? s.buttonAnimation : ""
+            isAnimating && activeAnimation === "whomi" ? s.buttonAnimation : ""
           }`}
           onClick={triggerWhomiAnimation}
         >
