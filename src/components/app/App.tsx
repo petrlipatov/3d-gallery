@@ -85,7 +85,7 @@ function LazyLoadedImage({ src, alt }) {
 const textPositions = generateRandom(TEXTS.length);
 const AnimatedText = animated(Text);
 
-const Contacts = ({ activeAnimation }) => {
+const Contacts = ({ activeAnimation, setIsControlsEnabled }) => {
   const meshRef = useRef();
   const { camera } = useThree();
 
@@ -102,17 +102,20 @@ const Contacts = ({ activeAnimation }) => {
 
       const offsetPosition = new THREE.Vector3()
         .copy(camera.position)
-        .add(direction.multiplyScalar(10));
+        .add(direction.multiplyScalar(15));
 
       // meshRef.current.fillOpacity = 0;
-      console.log(meshRef.current);
+
       // @ts-expect-error вапва
 
       meshRef.current.position.copy(offsetPosition);
+      setIsControlsEnabled(false);
+    } else {
+      setIsControlsEnabled(true);
     }
 
     // const timeout = setTimeout(() => (meshRef.current.fillOpacity = 1), 500);
-    // return () => clearTimeout(timeout);
+    // return () => );
   }, [activeAnimation]);
 
   if (activeAnimation !== "whomi") return null;
@@ -449,7 +452,10 @@ function CanvasScene() {
           <TextsCloud activeAnimation={activeAnimation} />
         </Suspense>
 
-        <Contacts activeAnimation={activeAnimation} />
+        <Contacts
+          activeAnimation={activeAnimation}
+          setIsControlsEnabled={setIsControlsEnabled}
+        />
 
         <OrbitControls
           enabled={isControlsEnabled}
