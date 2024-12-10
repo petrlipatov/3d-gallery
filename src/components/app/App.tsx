@@ -113,27 +113,26 @@ const Contacts = ({ activeAnimation, setIsControlsEnabled }) => {
     } else {
       setIsControlsEnabled(true);
     }
-
-    // const timeout = setTimeout(() => (meshRef.current.fillOpacity = 1), 500);
-    // return () => );
-  }, [activeAnimation]);
+  }, [activeAnimation, camera]);
 
   if (activeAnimation !== "whomi") return null;
 
   return (
     <AnimatedText
-      material-transparent // Делаем текст прозрачным
-      material-opacity={opacity} // Управляем прозрачностью через анимацию
+      material-transparent
+      material-opacity={opacity}
       ref={meshRef}
       fontSize={0.5}
+      lineHeight={1.9}
       color="white"
       anchorX="center"
       anchorY="middle"
-      lineHeight={1.5}
     >
       Stepan Lipatov
       {"\n"}
       stepanlipatov@gmail.com
+      {"\n"}
+      instagram.com/s7epa
     </AnimatedText>
   );
 };
@@ -438,7 +437,9 @@ function CanvasScene() {
   return (
     <div id="canvas-container" className={s.canvasContainer}>
       {image && <Popup image={image} onClose={closeImage} />}
-      <Canvas camera={{ fov: 75, position: [0, 0, isMobile ? 20 : 15] }}>
+      <Canvas
+        camera={{ fov: 75, position: [0, 0, isMobile ? 20 : 15], near: 1 }}
+      >
         <Suspense fallback={null}>
           <CloudOfImages
             onClick={openImage}
@@ -476,14 +477,7 @@ function CanvasScene() {
         />
       </Canvas>
       <Loader />
-      {/* <div
-        className={`${s.contactsContainer} ${
-          activeAnimation === "whomi" ? s.visible : ""
-        }`}
-      >
-        <p>Stepan Lipatov</p>
-        <p>stepanlipatov@gmail.com</p>
-      </div> */}
+
       <div className={s.controlsContainer}>
         <button
           className={`${s.button} ${
