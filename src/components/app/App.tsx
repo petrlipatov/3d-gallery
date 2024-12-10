@@ -83,10 +83,17 @@ function LazyLoadedImage({ src, alt }) {
 }
 
 const textPositions = generateRandom(TEXTS.length);
+const AnimatedText = animated(Text);
 
 const Contacts = ({ activeAnimation }) => {
-  const { camera } = useThree();
   const meshRef = useRef();
+  const { camera } = useThree();
+
+  const { opacity } = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: activeAnimation === "whomi" ? 1 : 0 },
+    config: { duration: 1000 },
+  });
 
   useEffect(() => {
     if (activeAnimation === "whomi" && meshRef.current) {
@@ -111,7 +118,9 @@ const Contacts = ({ activeAnimation }) => {
   if (activeAnimation !== "whomi") return null;
 
   return (
-    <Text
+    <AnimatedText
+      material-transparent // Делаем текст прозрачным
+      material-opacity={opacity} // Управляем прозрачностью через анимацию
       ref={meshRef}
       fontSize={0.5}
       color="white"
@@ -122,24 +131,30 @@ const Contacts = ({ activeAnimation }) => {
       Stepan Lipatov
       {"\n"}
       stepanlipatov@gmail.com
-    </Text>
+    </AnimatedText>
   );
 };
 
-const AnimatedText = ({ text, position }) => {
-  const meshRef = useRef();
+const AnimatedText2 = ({ text, position, delay }) => {
+  const { opacity } = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+    config: { duration: 500 },
+    delay,
+  });
 
   return (
-    <Text
-      position={new THREE.Vector3(position[0], position[1], position[2])}
-      ref={meshRef}
+    <AnimatedText
+      position={position}
       fontSize={0.1}
       color="white"
       anchorX="center"
       anchorY="middle"
+      material-transparent
+      material-opacity={opacity}
     >
       {text}
-    </Text>
+    </AnimatedText>
   );
 };
 
@@ -147,7 +162,12 @@ const TextsCloud = ({ activeAnimation }) => {
   if (activeAnimation !== "shuffle") return null;
 
   return TEXTS.map((el, index) => (
-    <AnimatedText key={el} text={el} position={textPositions[index]} />
+    <AnimatedText2
+      key={el}
+      text={el}
+      position={textPositions[index]}
+      delay={Math.max(30 * index, 2000)}
+    />
   ));
 };
 
