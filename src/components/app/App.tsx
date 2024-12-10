@@ -485,7 +485,8 @@ function CanvasScene() {
           }`}
           onClick={triggerRandomAnimation}
         >
-          Random
+          random
+          <div className={s.buttonLoader} />
         </button>
         <button
           className={`${s.button} ${
@@ -495,7 +496,8 @@ function CanvasScene() {
           }`}
           onClick={toggleShuffle}
         >
-          Shuffle
+          shuffle
+          <div className={s.buttonLoader} />
         </button>
         <button
           className={`${s.button} ${
@@ -503,7 +505,8 @@ function CanvasScene() {
           }`}
           onClick={toggleByDate}
         >
-          Grid
+          grid
+          <div className={s.buttonLoader} />
         </button>
 
         <button
@@ -512,7 +515,8 @@ function CanvasScene() {
           }`}
           onClick={triggerWhomiAnimation}
         >
-          Whomi
+          whomi
+          <div className={s.buttonLoader} />
         </button>
       </div>
     </div>
