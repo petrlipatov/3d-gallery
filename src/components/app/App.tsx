@@ -57,7 +57,7 @@ const positionsGrid = generateGridPositions(IMAGES.length);
 
 function Popup({ image, onClose }) {
   return createPortal(
-    <div className={s.popup} onClick={onClose} onTouchStart={onClose}>
+    <div className={s.popup} onClick={onClose}>
       <div className={s.popupContent}>
         <LazyLoadedImage src={image} alt="Selected" />
       </div>
