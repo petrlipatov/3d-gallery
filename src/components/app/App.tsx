@@ -159,7 +159,8 @@ const Contacts = ({ activeAnimation, setIsControlsEnabled }) => {
         <br />
         That's how I draw when I don't have an assignment.
         <br />
-        You could check my other projects on Instagram{" "}
+        <br />
+        You could check my other projects on Instagram
         <a href="https://instagram.com/s7epa" target="_blank">
           @s7epa
         </a>{" "}
