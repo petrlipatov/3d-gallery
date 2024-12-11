@@ -183,3 +183,18 @@
   visibility: visible; /* Отображается */
   transition: opacity 2s ease-out, visibility 0s ease 0s; /* Условие исчезновения */
 }
+
+.fadeIn {
+  opacity: 0;
+  animation: fadeIn 3s forwards; /* Задержка анимации 3 секунды */
+}
+
+/* Анимация плавного появления */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

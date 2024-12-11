@@ -1,11 +1,24 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { DragControls } from "three/addons/controls/DragControls.js";
 
-import { OrbitControls, Loader, useProgress, Text } from "@react-three/drei";
+import {
+  OrbitControls,
+  Loader,
+  useProgress,
+  Text,
+  Html,
+} from "@react-three/drei";
 import * as THREE from "three";
 import s from "./app.module.css";
 import { useLoader } from "@react-three/fiber";
-import { useEffect, Suspense, useState, useRef, forwardRef } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  Suspense,
+  useState,
+  useRef,
+  forwardRef,
+} from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router";
 import { useSpring, animated, config } from "@react-spring/three";
@@ -86,56 +99,236 @@ const textPositions = generateRandom(TEXTS.length);
 const AnimatedText = animated(Text);
 
 const Contacts = ({ activeAnimation, setIsControlsEnabled }) => {
-  const meshRef = useRef();
+  const [position, setPosition] = useState(new THREE.Vector3(0, 0, 0));
+  const [hidden, setHidden] = useState(true);
+
   const { camera } = useThree();
 
-  const { opacity } = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: activeAnimation === "whomi" ? 1 : 0 },
-    config: { duration: 1000 },
-  });
-
-  useEffect(() => {
-    if (activeAnimation === "whomi" && meshRef.current) {
+  useLayoutEffect(() => {
+    if (activeAnimation === "whomi") {
       const direction = new THREE.Vector3();
       camera.getWorldDirection(direction);
-
       const offsetPosition = new THREE.Vector3()
         .copy(camera.position)
         .add(direction.multiplyScalar(15));
+      setPosition(offsetPosition);
 
-      // meshRef.current.fillOpacity = 0;
-
-      // @ts-expect-error вапва
-
-      meshRef.current.position.copy(offsetPosition);
       setIsControlsEnabled(false);
-    } else {
-      setIsControlsEnabled(true);
     }
+
+    setTimeout(() => {
+      setHidden(false);
+    }, 2000);
+
+    return () => {
+      setIsControlsEnabled(true);
+      setHidden(true);
+    };
   }, [activeAnimation, camera]);
+
+  // const { opacity } = useSpring({
+  //   from: { opacity: 0 },
+  //   to: { opacity: activeAnimation === "whomi" ? 1 : 0 },
+  //   config: { duration: 3000 },
+  // });
 
   if (activeAnimation !== "whomi") return null;
 
   return (
-    <AnimatedText
-      material-transparent
-      material-opacity={opacity}
-      ref={meshRef}
-      fontSize={0.5}
-      lineHeight={1.9}
-      color="white"
-      anchorX="center"
-      anchorY="middle"
+    <Html
+      position={position}
+      center
+      style={{
+        transition: "opacity 0.5s",
+        opacity: hidden ? 0 : 1,
+      }}
     >
-      Stepan Lipatov
-      {"\n"}
-      stepanlipatov@gmail.com
-      {"\n"}
-      instagram.com/s7epa
-    </AnimatedText>
+      <div
+        style={{
+          color: "white",
+          width: "300px",
+          textDecoration: "none",
+        }}
+      >
+        Hey! My name is Stepan Lipatov. I am a drawing graphic designer and
+        educator.
+        <br />
+        On this web page, you could see almost 200 drawings I did in the last
+        two years.
+        <br />
+        That's how I draw when I don't have an assignment.
+        <br />
+        You could check my other projects on Instagram{" "}
+        <a href="https://instagram.com/s7epa" target="_blank">
+          @s7epa
+        </a>{" "}
+        or on my portfolio page:{" "}
+        <a href="https://stepanlee.cargo.site" target="_blank">
+          https://stepanlee.cargo.site
+        </a>
+        .
+        <br />
+        <br />
+        If you want to contact me, here is my email:{" "}
+        <a href="mailto:stepanlipatov@gmail.com">stepanlipatov@gmail.com</a>.
+      </div>
+    </Html>
   );
 };
+
+// const Contacts = ({ activeAnimation, setIsControlsEnabled }) => {
+//   const meshRef = useRef();
+//   const { camera } = useThree();
+
+//   const { opacity } = useSpring({
+//     from: { opacity: 1 },
+//     to: { opacity: activeAnimation === "whomi" ? 1 : 0 },
+//     config: { duration: 1000 },
+//   });
+
+//   useEffect(() => {
+//     if (activeAnimation === "whomi" && meshRef.current) {
+//       const direction = new THREE.Vector3();
+//       camera.getWorldDirection(direction);
+
+//       const offsetPosition = new THREE.Vector3()
+//         .copy(camera.position)
+//         .add(direction.multiplyScalar(15));
+
+//       // meshRef.current.fillOpacity = 0;
+
+//       // @ts-expect-error вапва
+
+//       meshRef.current.position.copy(offsetPosition);
+//       setIsControlsEnabled(false);
+//     } else {
+//       setIsControlsEnabled(true);
+//     }
+//   }, [activeAnimation, camera]);
+
+//   if (activeAnimation !== "whomi") return null;
+
+//   return (
+//     <group ref={meshRef}>
+//       <Text
+//         fontSize={0.5}
+//         lineHeight={1.9}
+//         color="white"
+//         anchorX="center"
+//         anchorY="middle"
+//         material-opacity={opacity}
+//       >
+//         Hey! My name is
+//       </Text>
+//       <Text
+//         fontSize={0.5}
+//         lineHeight={1.9}
+//         color="cyan"
+//         anchorX="center"
+//         anchorY="middle"
+//         position={[0, -0.6, 0]} // Смещение текста вниз
+//         material-opacity={opacity}
+//       >
+//         Stepan Lipatov
+//       </Text>
+//       <Text
+//         fontSize={0.5}
+//         lineHeight={1.9}
+//         color="white"
+//         anchorX="center"
+//         anchorY="middle"
+//         position={[0, -1.2, 0]} // Еще ниже
+//         material-opacity={opacity}
+//       >
+//         I am a drawing graphic designer and educator.
+//       </Text>
+//       <Text
+//         fontSize={0.5}
+//         lineHeight={1.9}
+//         color="orange"
+//         anchorX="center"
+//         anchorY="middle"
+//         position={[0, -1.8, 0]}
+//         material-opacity={opacity}
+//         onClick={() => window.open("https://instagram.com/s7epa", "_blank")}
+//         style={{ cursor: "pointer" }}
+//       >
+//         @s7epa
+//       </Text>
+//       <Text
+//         fontSize={0.5}
+//         lineHeight={1.9}
+//         color="white"
+//         anchorX="center"
+//         anchorY="middle"
+//         position={[0, -2.4, 0]}
+//         material-opacity={opacity}
+//       >
+//         Or check my portfolio at
+//       </Text>
+//       <Text
+//         fontSize={0.5}
+//         lineHeight={1.9}
+//         color="orange"
+//         anchorX="center"
+//         anchorY="middle"
+//         position={[0, -3.0, 0]}
+//         material-opacity={opacity}
+//         onClick={() => window.open("https://stepanlee.cargo.site", "_blank")}
+//         style={{ cursor: "pointer" }}
+//       >
+//         https://stepanlee.cargo.site
+//       </Text>
+//     </group>
+//   );
+// };
+
+// const ContactsComp = ({ activeAnimation, setIsControlsEnabled }) => {
+//   // const meshRef = useRef();
+//   // const { camera } = useThree();
+
+//   const { opacity } = useSpring({
+//     from: { opacity: 0 },
+//     to: { opacity: activeAnimation === "whomi" ? 1 : 0 },
+//     config: { duration: 1000 },
+//   });
+
+//   // useEffect(() => {
+//   //   if (activeAnimation === "whomi" && meshRef.current) {
+//   // const direction = new THREE.Vector3();
+//   // camera.getWorldDirection(direction);
+
+//   // const offsetPosition = new THREE.Vector3()
+//   //   .copy(camera.position)
+//   //   .add(direction.multiplyScalar(15));
+
+//   // meshRef.current.fillOpacity = 0;
+
+//   // @ts-expect-error вапва
+
+//   //     meshRef.current.position.copy(offsetPosition);
+//   //     setIsControlsEnabled(false);
+//   //   } else {
+//   //     setIsControlsEnabled(true);
+//   //   }
+//   // }, [activeAnimation, camera]);
+
+//   if (activeAnimation !== "whomi") return null;
+
+//   return (
+//     <animated.div style={{ opacity }}>
+//       Hey! My name is Stepan Lipatov. I am a drawing graphic designer
+//       {"\n"} and educator. On this web page you could see almost {"\n"}
+//       200 drawings I did in the last two years. That's how I draw{"\n"}
+//       when I don't have an assignment. You could check my other projects {"\n"}
+//       on my Instagram @s7epa or on my graphic design portfolio page: {"\n"}
+//       https://stepanlee.cargo.site/ If you want to contact me,
+//       {"\n"}here is my email: stepanlipatov@gmail.com stepanlipatov@gmail.com
+//       {"\n"}
+//       instagram.com/s7epa
+//     </animated.div>
+//   );
+// };
 
 const AnimatedText2 = ({ text, position, delay }) => {
   const { opacity } = useSpring({
@@ -451,12 +644,11 @@ function CanvasScene() {
             isDragged={isDragged}
           />
           <TextsCloud activeAnimation={activeAnimation} />
+          <Contacts
+            activeAnimation={activeAnimation}
+            setIsControlsEnabled={setIsControlsEnabled}
+          />
         </Suspense>
-
-        <Contacts
-          activeAnimation={activeAnimation}
-          setIsControlsEnabled={setIsControlsEnabled}
-        />
 
         <OrbitControls
           enabled={isControlsEnabled}
@@ -477,6 +669,11 @@ function CanvasScene() {
         />
       </Canvas>
       <Loader />
+
+      {/* <ContactsComp
+        activeAnimation={activeAnimation}
+        setIsControlsEnabled={setIsControlsEnabled}
+      /> */}
 
       <div className={s.controlsContainer}>
         <button
