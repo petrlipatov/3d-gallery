@@ -118,7 +118,8 @@ const Contacts = ({ activeAnimation, setIsControlsEnabled }) => {
 
     setTimeout(() => {
       setHidden(false);
-    }, 2000);
+    }, 500);
+    // setHidden(false);
 
     return () => {
       setIsControlsEnabled(true);
@@ -139,7 +140,7 @@ const Contacts = ({ activeAnimation, setIsControlsEnabled }) => {
       position={position}
       center
       style={{
-        transition: "opacity 0.5s",
+        transition: "opacity 1s",
         opacity: hidden ? 0 : 1,
       }}
     >
