@@ -645,7 +645,7 @@ function CanvasScene() {
             setIsDragged={setIsDragged}
             isDragged={isDragged}
           />
-          <TextsCloud activeAnimation={activeAnimation} />
+          {/* <TextsCloud activeAnimation={activeAnimation} /> */}
           <Contacts
             activeAnimation={activeAnimation}
             setIsControlsEnabled={setIsControlsEnabled}
