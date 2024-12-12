@@ -69,10 +69,12 @@ const generateGridPositions = (totalItems, spacing = 2) => {
 const positionsGrid = generateGridPositions(IMAGES.length);
 
 function Popup({ image, onClose }) {
+  const imageData = IMAGES[image];
+
   return createPortal(
     <div className={s.popup} onClick={onClose}>
       <div className={s.popupContent}>
-        <LazyLoadedImage src={image} alt="Selected" />
+        <LazyLoadedImage src={imageData.hires} alt="Selected" />
       </div>
     </div>,
     document.getElementById("modal-root")
@@ -369,7 +371,7 @@ const TextsCloud = ({ activeAnimation }) => {
 };
 
 // @ts-expect-error вапва
-const ImagePlane = forwardRef(({ data, onClick, isDragging }, ref) => {
+const ImagePlane = forwardRef(({ data, onClick, isDragging, index }, ref) => {
   const [active, setActive] = useState(false);
 
   const { width } = useViewport();
@@ -403,7 +405,7 @@ const ImagePlane = forwardRef(({ data, onClick, isDragging }, ref) => {
       onClick={(e) => {
         e.stopPropagation();
         if (!isDragging) {
-          onClick(data.hires);
+          onClick(index);
         }
       }}
     >
@@ -539,6 +541,7 @@ const CloudOfImages = ({
             ref={(el) => {
               refs.current[index] = el;
             }}
+            index={index}
             isDragged={isDragged}
           />
         );
