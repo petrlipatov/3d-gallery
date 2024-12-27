@@ -180,160 +180,6 @@ const Contacts = ({ activeAnimation, setIsControlsEnabled }) => {
   );
 };
 
-// const Contacts = ({ activeAnimation, setIsControlsEnabled }) => {
-//   const meshRef = useRef();
-//   const { camera } = useThree();
-
-//   const { opacity } = useSpring({
-//     from: { opacity: 1 },
-//     to: { opacity: activeAnimation === "whomi" ? 1 : 0 },
-//     config: { duration: 1000 },
-//   });
-
-//   useEffect(() => {
-//     if (activeAnimation === "whomi" && meshRef.current) {
-//       const direction = new THREE.Vector3();
-//       camera.getWorldDirection(direction);
-
-//       const offsetPosition = new THREE.Vector3()
-//         .copy(camera.position)
-//         .add(direction.multiplyScalar(15));
-
-//       // meshRef.current.fillOpacity = 0;
-
-//       // @ts-expect-error вапва
-
-//       meshRef.current.position.copy(offsetPosition);
-//       setIsControlsEnabled(false);
-//     } else {
-//       setIsControlsEnabled(true);
-//     }
-//   }, [activeAnimation, camera]);
-
-//   if (activeAnimation !== "whomi") return null;
-
-//   return (
-//     <group ref={meshRef}>
-//       <Text
-//         fontSize={0.5}
-//         lineHeight={1.9}
-//         color="white"
-//         anchorX="center"
-//         anchorY="middle"
-//         material-opacity={opacity}
-//       >
-//         Hey! My name is
-//       </Text>
-//       <Text
-//         fontSize={0.5}
-//         lineHeight={1.9}
-//         color="cyan"
-//         anchorX="center"
-//         anchorY="middle"
-//         position={[0, -0.6, 0]} // Смещение текста вниз
-//         material-opacity={opacity}
-//       >
-//         Stepan Lipatov
-//       </Text>
-//       <Text
-//         fontSize={0.5}
-//         lineHeight={1.9}
-//         color="white"
-//         anchorX="center"
-//         anchorY="middle"
-//         position={[0, -1.2, 0]} // Еще ниже
-//         material-opacity={opacity}
-//       >
-//         I am a drawing graphic designer and educator.
-//       </Text>
-//       <Text
-//         fontSize={0.5}
-//         lineHeight={1.9}
-//         color="orange"
-//         anchorX="center"
-//         anchorY="middle"
-//         position={[0, -1.8, 0]}
-//         material-opacity={opacity}
-//         onClick={() => window.open("https://instagram.com/s7epa", "_blank")}
-//         style={{ cursor: "pointer" }}
-//       >
-//         @s7epa
-//       </Text>
-//       <Text
-//         fontSize={0.5}
-//         lineHeight={1.9}
-//         color="white"
-//         anchorX="center"
-//         anchorY="middle"
-//         position={[0, -2.4, 0]}
-//         material-opacity={opacity}
-//       >
-//         Or check my portfolio at
-//       </Text>
-//       <Text
-//         fontSize={0.5}
-//         lineHeight={1.9}
-//         color="orange"
-//         anchorX="center"
-//         anchorY="middle"
-//         position={[0, -3.0, 0]}
-//         material-opacity={opacity}
-//         onClick={() => window.open("https://stepanlee.cargo.site", "_blank")}
-//         style={{ cursor: "pointer" }}
-//       >
-//         https://stepanlee.cargo.site
-//       </Text>
-//     </group>
-//   );
-// };
-
-// const ContactsComp = ({ activeAnimation, setIsControlsEnabled }) => {
-//   // const meshRef = useRef();
-//   // const { camera } = useThree();
-
-//   const { opacity } = useSpring({
-//     from: { opacity: 0 },
-//     to: { opacity: activeAnimation === "whomi" ? 1 : 0 },
-//     config: { duration: 1000 },
-//   });
-
-//   // useEffect(() => {
-//   //   if (activeAnimation === "whomi" && meshRef.current) {
-//   // const direction = new THREE.Vector3();
-//   // camera.getWorldDirection(direction);
-
-//   // const offsetPosition = new THREE.Vector3()
-//   //   .copy(camera.position)
-//   //   .add(direction.multiplyScalar(15));
-
-//   // meshRef.current.fillOpacity = 0;
-
-//   // @ts-expect-error вапва
-
-//   //     meshRef.current.position.copy(offsetPosition);
-//   //     setIsControlsEnabled(false);
-//   //   } else {
-//   //     setIsControlsEnabled(true);
-//   //   }
-//   // }, [activeAnimation, camera]);
-
-//   if (activeAnimation !== "whomi") return null;
-
-//   return (
-//     <animated.div style={{ opacity }}>
-//       Hey! My name is Stepan Lipatov. I am a drawing graphic designer
-//       {"\n"} and educator. On this web page you could see almost {"\n"}
-//       200 drawings I did in the last two years. That's how I draw{"\n"}
-//       when I don't have an assignment. You could check my other projects {"\n"}
-//       on my Instagram @s7epa or on my graphic design portfolio page: {"\n"}
-//       https://stepanlee.cargo.site/ If you want to contact me,
-//       {"\n"}here is my email: stepanlipatov@gmail.com stepanlipatov@gmail.com
-//       {"\n"}
-//       instagram.com/s7epa
-//     </animated.div>
-//   );
-// };
-
 const AnimatedText2 = ({ text, position, delay }) => {
   const { opacity } = useSpring({
     from: { opacity: 0 },
@@ -403,6 +249,12 @@ const ImagePlane = forwardRef(({ data, onClick, isDragging, index }, ref) => {
         setActive(!active);
       }}
       onClick={(e) => {
+        e.stopPropagation();
+        if (!isDragging) {
+          onClick(index);
+        }
+      }}
+      onDoubleClick={(e) => {
         e.stopPropagation();
         if (!isDragging) {
           onClick(index);
@@ -501,13 +353,15 @@ const CloudOfImages = ({
     dragControls.addEventListener("drag", () => {
       setTimeout(() => {
         setIsDragged(true);
-      }, 100);
-      setIsControlsEnabled(false);
+        setIsControlsEnabled(false);
+      }, 400);
     });
 
     dragControls.addEventListener("dragend", () => {
-      setIsDragged(false);
-      setIsControlsEnabled(true);
+      setTimeout(() => {
+        setIsDragged(false);
+        setIsControlsEnabled(true);
+      }, 400);
     });
 
     return () => {
@@ -674,11 +528,6 @@ function CanvasScene() {
         />
       </Canvas>
       <Loader />
-
-      {/* <ContactsComp
-        activeAnimation={activeAnimation}
-        setIsControlsEnabled={setIsControlsEnabled}
-      /> */}
 
       <div className={s.controlsContainer}>
         <button
