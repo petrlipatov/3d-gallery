@@ -353,15 +353,15 @@ const CloudOfImages = ({
     dragControls.addEventListener("drag", () => {
       setTimeout(() => {
         setIsDragged(true);
-        setIsControlsEnabled(false);
       }, 400);
+      setIsControlsEnabled(false);
     });
 
     dragControls.addEventListener("dragend", () => {
       setTimeout(() => {
         setIsDragged(false);
-        setIsControlsEnabled(true);
       }, 400);
+      setIsControlsEnabled(true);
     });
 
     return () => {
