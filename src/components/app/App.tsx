@@ -248,13 +248,7 @@ const ImagePlane = forwardRef(({ data, onClick, isDragging, index }, ref) => {
       onPointerOut={() => {
         setActive(!active);
       }}
-      onClick={(e) => {
-        e.stopPropagation();
-        if (!isDragging) {
-          onClick(index);
-        }
-      }}
-      onDoubleClick={(e) => {
+      onPointerUp={(e) => {
         e.stopPropagation();
         if (!isDragging) {
           onClick(index);
