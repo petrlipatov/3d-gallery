@@ -1,0 +1,21 @@
+.popup {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popupContent {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.popupContent img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
