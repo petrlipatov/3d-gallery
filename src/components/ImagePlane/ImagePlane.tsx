@@ -25,7 +25,7 @@ export const ImagePlane = forwardRef<THREE.Mesh, ImagePlaneProps>(
 
     const texture = useLoader(
       THREE.TextureLoader,
-      `https://api.stepanplusdrawingultra.site/images/${
+      `https://api.stepanplusdrawingultra.site/images${
         isMobile ? small : medium
       }`
     ) as THREE.Texture;

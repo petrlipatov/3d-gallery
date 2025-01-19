@@ -12,7 +12,7 @@ export function Popup({ image, onClose }) {
     <div className={s.popup} onClick={onClose}>
       <div className={s.popupContent}>
         <LazyLoadedImage
-          src={`https://api.stepanplusdrawingultra.site/images/${imageData.large}`}
+          src={`https://api.stepanplusdrawingultra.site/images${imageData.large}`}
           alt="selected-image"
         />
       </div>

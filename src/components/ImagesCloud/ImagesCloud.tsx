@@ -27,8 +27,6 @@ export const ImagesCloud = ({
     return generateGridPositions(imagesData.length);
   }, [imagesData.length]);
 
-  console.log(positionsGrid);
-
   useFrame(() => {
     if (!isAnimating) {
       return;
