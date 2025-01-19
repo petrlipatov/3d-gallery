@@ -1,4 +1,11 @@
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useSearchParams } from "react-router";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
@@ -11,7 +18,7 @@ import { ImagesCloud } from "../ImagesCloud/ImagesCloud";
 
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateRandomPositions } from "@/shared/helpers";
-import { IMAGES } from "@/shared/constants";
+import { imagesContext } from "@/shared/constants/contexts";
 import s from "./CanvasScene.module.css";
 
 export function CanvasScene() {
@@ -21,10 +28,11 @@ export function CanvasScene() {
   const [activeAnimation, setActiveAnimation] = useState("shuffle");
   const [isAnimating, setIsAnimating] = useState(false);
   const [isDragged, setIsDragged] = useState(false);
-
   const animationTimerRef = useRef<NodeJS.Timeout>();
+
   const { width } = useViewport();
   const { loaded, total } = useProgress();
+  const imagesData = useContext(imagesContext);
 
   const image = searchParams.get("image");
   const isMobile = width < 768;
@@ -45,9 +53,9 @@ export function CanvasScene() {
       animationTimerRef.current = setInterval(() => {
         setIsAnimating(false);
       }, 4000);
-      setRandomCoordinate(generateRandomPositions(IMAGES.length));
+      setRandomCoordinate(generateRandomPositions(imagesData?.length));
     }
-  }, [loaded, total]);
+  }, [loaded, total, imagesData]);
 
   const triggerWhomiAnimation = () => {
     setIsAnimating(true);
@@ -85,7 +93,7 @@ export function CanvasScene() {
     clearAnimationTimer();
     animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
     if (activeAnimation === "shuffle") {
-      const data = generateRandomPositions(IMAGES.length);
+      const data = generateRandomPositions(imagesData.length);
       setRandomCoordinate(data);
     }
     setActiveAnimation("shuffle");
@@ -99,89 +107,95 @@ export function CanvasScene() {
   };
 
   return (
-    <div id="canvas-container" className={s.canvasContainer}>
-      {image && <Popup image={image} onClose={closeImage} />}
-      <Canvas
-        camera={{ fov: 75, position: [0, 0, isMobile ? 20 : 15], near: 1 }}
-      >
-        <Suspense fallback={null}>
-          <ImagesCloud
-            isDragged={isDragged}
-            isAnimating={isAnimating}
-            activeAnimation={activeAnimation}
-            randomCoordinates={randomCoordinates}
-            onClick={openImage} // cached
-            setIsControlsEnabled={setIsControlsEnabled} // cached
-            setIsDragged={setIsDragged} // cached
+    imagesData && (
+      <div id="canvas-container" className={s.canvasContainer}>
+        {image && <Popup image={image} onClose={closeImage} />}
+        <Canvas
+          camera={{ fov: 75, position: [0, 0, isMobile ? 20 : 15], near: 1 }}
+        >
+          <Suspense fallback={null}>
+            <ImagesCloud
+              isDragged={isDragged}
+              isAnimating={isAnimating}
+              activeAnimation={activeAnimation}
+              randomCoordinates={randomCoordinates}
+              onClick={openImage} // cached
+              setIsControlsEnabled={setIsControlsEnabled} // cached
+              setIsDragged={setIsDragged} // cached
+            />
+            <TextsCloud activeAnimation={activeAnimation} />
+            <About
+              activeAnimation={activeAnimation}
+              setIsControlsEnabled={setIsControlsEnabled}
+            />
+          </Suspense>
+
+          <OrbitControls
+            enabled={isControlsEnabled}
+            enableDamping
+            enablePan
+            zoomToCursor
+            enableRotate={false}
+            minDistance={-20}
+            maxDistance={isMobile ? 20 : 15}
+            mouseButtons={{
+              LEFT: THREE.MOUSE.PAN,
+              MIDDLE: THREE.MOUSE.DOLLY,
+            }}
+            touches={{
+              ONE: THREE.TOUCH.PAN,
+              TWO: THREE.TOUCH.DOLLY_PAN,
+            }}
           />
-          <TextsCloud activeAnimation={activeAnimation} />
-          <About
-            activeAnimation={activeAnimation}
-            setIsControlsEnabled={setIsControlsEnabled}
-          />
-        </Suspense>
+        </Canvas>
+        <Loader />
 
-        <OrbitControls
-          enabled={isControlsEnabled}
-          enableDamping
-          enablePan
-          zoomToCursor
-          enableRotate={false}
-          minDistance={-20}
-          maxDistance={isMobile ? 20 : 15}
-          mouseButtons={{
-            LEFT: THREE.MOUSE.PAN,
-            MIDDLE: THREE.MOUSE.DOLLY,
-          }}
-          touches={{
-            ONE: THREE.TOUCH.PAN,
-            TWO: THREE.TOUCH.DOLLY_PAN,
-          }}
-        />
-      </Canvas>
-      <Loader />
+        <div className={s.controlsContainer}>
+          <button
+            className={`${s.button} ${
+              isAnimating && activeAnimation === "random"
+                ? s.buttonAnimation
+                : ""
+            }`}
+            onClick={triggerRandomAnimation}
+          >
+            random
+            <div className={s.buttonLoader} />
+          </button>
+          <button
+            className={`${s.button} ${
+              isAnimating && activeAnimation === "shuffle"
+                ? s.buttonAnimation
+                : ""
+            }`}
+            onClick={toggleShuffle}
+          >
+            shuffle
+            <div className={s.buttonLoader} />
+          </button>
+          <button
+            className={`${s.button} ${
+              isAnimating && activeAnimation === "grid" ? s.buttonAnimation : ""
+            }`}
+            onClick={toggleByDate}
+          >
+            grid
+            <div className={s.buttonLoader} />
+          </button>
 
-      <div className={s.controlsContainer}>
-        <button
-          className={`${s.button} ${
-            isAnimating && activeAnimation === "random" ? s.buttonAnimation : ""
-          }`}
-          onClick={triggerRandomAnimation}
-        >
-          random
-          <div className={s.buttonLoader} />
-        </button>
-        <button
-          className={`${s.button} ${
-            isAnimating && activeAnimation === "shuffle"
-              ? s.buttonAnimation
-              : ""
-          }`}
-          onClick={toggleShuffle}
-        >
-          shuffle
-          <div className={s.buttonLoader} />
-        </button>
-        <button
-          className={`${s.button} ${
-            isAnimating && activeAnimation === "grid" ? s.buttonAnimation : ""
-          }`}
-          onClick={toggleByDate}
-        >
-          grid
-          <div className={s.buttonLoader} />
-        </button>
-
-        <button
-          className={`${s.button} ${
-            isAnimating && activeAnimation === "whomi" ? s.buttonAnimation : ""
-          }`}
-          onClick={triggerWhomiAnimation}
-        >
-          whomi
-          <div className={s.buttonLoader} />
-        </button>
+          <button
+            className={`${s.button} ${
+              isAnimating && activeAnimation === "whomi"
+                ? s.buttonAnimation
+                : ""
+            }`}
+            onClick={triggerWhomiAnimation}
+          >
+            whomi
+            <div className={s.buttonLoader} />
+          </button>
+        </div>
       </div>
-    </div>
+    )
   );
 }

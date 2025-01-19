@@ -5,8 +5,9 @@ import { useViewport } from "@/shared/hooks/useViewport";
 import { useSpring, config, animated } from "@react-spring/three";
 interface ImagePlaneProps {
   data: {
-    lowresMobile: string;
-    lowresDesktop: string;
+    large: string;
+    medium: string;
+    small: string;
   };
   onClick: (index: number) => void;
   isDragged: boolean;
@@ -20,11 +21,13 @@ export const ImagePlane = forwardRef<THREE.Mesh, ImagePlaneProps>(
     const { width } = useViewport();
     const isMobile = width < 768;
 
-    const { lowresMobile, lowresDesktop } = data;
+    const { medium, small } = data;
 
     const texture = useLoader(
       THREE.TextureLoader,
-      isMobile ? lowresMobile : lowresDesktop
+      `https://api.stepanplusdrawingultra.site/images/${
+        isMobile ? small : medium
+      }`
     ) as THREE.Texture;
 
     const { scale } = useSpring({

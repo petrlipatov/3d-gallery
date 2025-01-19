@@ -1,13 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { DragControls } from "three/addons/controls/DragControls.js";
 import { ImagePlane } from "../ImagePlane";
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateGridPositions } from "@/shared/helpers";
-import { IMAGES } from "@/shared/constants";
-
-const positionsGrid = generateGridPositions(IMAGES.length);
+import { imagesContext } from "@/shared/constants/contexts";
 
 export const ImagesCloud = ({
   activeAnimation,
@@ -21,9 +19,13 @@ export const ImagesCloud = ({
   const refs = useRef([]);
   const { camera, gl } = useThree();
   const [selectedIndex, setSelectedIndex] = useState(null);
-
+  const imagesData = useContext(imagesContext);
   const { width } = useViewport();
   const farAway = width < 768 ? 20 : 15;
+
+  const positionsGrid = useMemo(() => {
+    generateGridPositions(imagesData.length);
+  }, [imagesData]);
 
   useFrame(() => {
     if (!isAnimating) {
@@ -125,22 +127,23 @@ export const ImagesCloud = ({
   }, [activeAnimation, isAnimating]);
 
   return (
-    <>
-      {randomCoordinates.map((_, index) => {
-        return (
-          <ImagePlane
-            key={index}
-            data={IMAGES[index]}
-            // position={randomCoordinates[index]}
-            onClick={onClick}
-            ref={(el) => {
-              refs.current[index] = el;
-            }}
-            index={index}
-            isDragged={isDragged}
-          />
-        );
-      })}
-    </>
+    imagesData && (
+      <>
+        {randomCoordinates.map((_, index) => {
+          return (
+            <ImagePlane
+              key={index}
+              data={imagesData[index]}
+              onClick={onClick}
+              ref={(el) => {
+                refs.current[index] = el;
+              }}
+              index={index}
+              isDragged={isDragged}
+            />
+          );
+        })}
+      </>
+    )
   );
 };
