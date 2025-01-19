@@ -131,7 +131,7 @@ export const ImagesCloud = ({
           <ImagePlane
             key={index}
             data={IMAGES[index]}
-            position={randomCoordinates[index]}
+            // position={randomCoordinates[index]}
             onClick={onClick}
             ref={(el) => {
               refs.current[index] = el;

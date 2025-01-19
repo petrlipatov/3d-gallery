@@ -9,12 +9,12 @@ interface ImagePlaneProps {
     lowresDesktop: string;
   };
   onClick: (index: number) => void;
-  isDragging: boolean;
+  isDragged: boolean;
   index: number;
 }
 
 export const ImagePlane = forwardRef<THREE.Mesh, ImagePlaneProps>(
-  ({ data, onClick, isDragging, index }, ref) => {
+  ({ data, onClick, isDragged, index }, ref) => {
     const [active, setActive] = useState(false);
 
     const { width } = useViewport();
@@ -45,7 +45,7 @@ export const ImagePlane = forwardRef<THREE.Mesh, ImagePlaneProps>(
         }}
         onPointerUp={(e) => {
           e.stopPropagation();
-          if (!isDragging) {
+          if (!isDragged) {
             onClick(index);
           }
         }}
