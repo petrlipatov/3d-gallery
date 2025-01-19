@@ -1,0 +1,1 @@
+export { CanvasScene } from "./CanvasScene";

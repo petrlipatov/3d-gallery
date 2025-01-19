@@ -1,11 +1,19 @@
 import * as THREE from "three";
 import { useLoader } from "@react-three/fiber";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { useViewport } from "@/shared/hooks/useViewport";
 import { useSpring, config, animated } from "@react-spring/three";
+interface ImagePlaneProps {
+  data: {
+    lowresMobile: string;
+    lowresDesktop: string;
+  };
+  onClick: (index: number) => void;
+  isDragging: boolean;
+  index: number;
+}
 
-// @ts-expect-error вапва
-export const ImagePlane = forwardRef(
+export const ImagePlane = forwardRef<THREE.Mesh, ImagePlaneProps>(
   ({ data, onClick, isDragging, index }, ref) => {
     const [active, setActive] = useState(false);
 

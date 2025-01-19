@@ -11,7 +11,7 @@ export function LazyLoadedImage({ src, alt }) {
   }, [src]);
 
   if (!loadedSrc) {
-    return <span className={s.loader} />;
+    return <span className={s.loader}/>;
   }
 
   return <img src={loadedSrc} alt={alt} />;
