@@ -24,13 +24,16 @@ export const ImagesCloud = ({
   const farAway = width < 768 ? 20 : 15;
 
   const positionsGrid = useMemo(() => {
-    generateGridPositions(imagesData.length);
-  }, [imagesData]);
+    return generateGridPositions(imagesData.length);
+  }, [imagesData.length]);
+
+  console.log(positionsGrid);
 
   useFrame(() => {
     if (!isAnimating) {
       return;
     }
+
     if (activeAnimation === "grid") {
       refs.current.forEach((ref, i) => {
         ref.position.lerp(
