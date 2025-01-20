@@ -1,4 +1,11 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { DragControls } from "three/addons/controls/DragControls.js";
@@ -23,9 +30,17 @@ export const ImagesCloud = ({
   const { width } = useViewport();
   const farAway = width < 768 ? 20 : 15;
 
+  const dragStartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dragEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const positionsGrid = useMemo(() => {
     return generateGridPositions(imagesData.length);
   }, [imagesData.length]);
+
+  const handleRandomize = useCallback(() => {
+    const randomIndex = Math.floor(Math.random() * randomCoordinates.length);
+    setSelectedIndex(randomIndex);
+  }, [randomCoordinates.length]);
 
   useFrame(() => {
     if (!isAnimating) {
@@ -93,39 +108,64 @@ export const ImagesCloud = ({
     if (isAnimating) {
       return;
     }
+
     const dragControls = new DragControls(refs.current, camera, gl.domElement);
 
-    dragControls.addEventListener("drag", () => {
-      setTimeout(() => {
+    const setDraggingOnWithDelay = () => {
+      dragStartTimerRef.current = setTimeout(() => {
         setIsDragged(true);
+        console.log("on");
       }, 400);
       setIsControlsEnabled(false);
-    });
+    };
 
-    dragControls.addEventListener("dragend", () => {
-      setTimeout(() => {
+    const setDraggingOffWithDelay = () => {
+      dragEndTimerRef.current = setTimeout(() => {
         setIsDragged(false);
       }, 400);
       setIsControlsEnabled(true);
-    });
+    };
+
+    const handleDrag = () => {
+      if (dragStartTimerRef.current) {
+        return;
+      }
+      setDraggingOnWithDelay();
+    };
+
+    const handleDragEnd = () => {
+      if (dragStartTimerRef.current) {
+        clearTimeout(dragStartTimerRef.current);
+        dragStartTimerRef.current = null;
+      }
+      if (dragEndTimerRef.current) clearTimeout(dragEndTimerRef.current);
+
+      setDraggingOffWithDelay();
+    };
+
+    dragControls.addEventListener("drag", handleDrag);
+    dragControls.addEventListener("dragend", handleDragEnd);
 
     return () => {
-      // dragControls.removeEventListener("drag", onDrag);
-      // dragControls.removeEventListener("dragend", onDragEnd);
+      dragControls.removeEventListener("drag", handleDrag);
+      dragControls.removeEventListener("dragend", handleDragEnd);
+
+      if (dragStartTimerRef.current) {
+        clearTimeout(dragStartTimerRef.current);
+      }
+      if (dragEndTimerRef.current) {
+        clearTimeout(dragEndTimerRef.current);
+      }
+
       dragControls.dispose();
     };
   }, [camera, gl, setIsControlsEnabled, isAnimating, setIsDragged]);
-
-  const handleRandomize = () => {
-    const randomIndex = Math.floor(Math.random() * randomCoordinates.length);
-    setSelectedIndex(randomIndex);
-  };
 
   useEffect(() => {
     if (activeAnimation === "random") {
       handleRandomize();
     }
-  }, [activeAnimation, isAnimating]);
+  }, [activeAnimation, isAnimating, handleRandomize]);
 
   return (
     imagesData && (
