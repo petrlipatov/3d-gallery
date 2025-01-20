@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { imagesContext } from "@shared/constants/contexts";
+import { BASE_API_URL, IMAGES_PATH } from "@/shared/constants";
 
 export function ImagesProvider({ children }) {
   const [images, setImages] = useState(null);
   useEffect(() => {
-    fetch("https://api.stepanplusdrawingultra.site/images")
+    fetch(`${BASE_API_URL}${IMAGES_PATH}`)
       .then((response) => response.json())
       .then((jsonData) => {
         setImages(jsonData);

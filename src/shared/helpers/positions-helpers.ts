@@ -1,4 +1,4 @@
-export function generateRandomPositions(len) {
+export function generateRandomPositions(len): [number, number, number][] {
   return Array.from({ length: len }, () => {
     const spacing = 1.5;
 
@@ -14,7 +14,10 @@ export function generateRandomPositions(len) {
   });
 }
 
-export const generateGridPositions = (totalItems, spacing = 2) => {
+export const generateGridPositions = (
+  totalItems,
+  spacing = 2
+): [number, number, number][] => {
   const cols = Math.ceil(Math.sqrt(totalItems));
   const rows = Math.ceil(totalItems / cols);
 

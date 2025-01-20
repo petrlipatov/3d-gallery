@@ -1,4 +1,5 @@
 import {
+  Dispatch,
   useCallback,
   useContext,
   useEffect,
@@ -13,18 +14,30 @@ import { ImagePlane } from "../ImagePlane";
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateGridPositions } from "@/shared/helpers";
 import { imagesContext } from "@/shared/constants/contexts";
+import { Animations } from "@/shared/constants";
+import { Coordinates } from "@/shared/types";
 
 const targetVector = new THREE.Vector3();
 
+type Props = {
+  activeAnimation: Animations;
+  randomCoordinates: Coordinates;
+  isAnimating: boolean;
+  isDragged: boolean;
+  imageClickHandler: (index: number) => void;
+  setIsControlsEnabled: Dispatch<React.SetStateAction<boolean>>;
+  setIsDragged: Dispatch<React.SetStateAction<boolean>>;
+};
+
 export const ImagesCloud = ({
   activeAnimation,
-  onClick,
   randomCoordinates,
-  setIsControlsEnabled,
   isAnimating,
-  setIsDragged,
   isDragged,
-}) => {
+  imageClickHandler,
+  setIsDragged,
+  setIsControlsEnabled,
+}: Props) => {
   const refs = useRef([]);
   const { camera, gl } = useThree();
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -48,7 +61,7 @@ export const ImagesCloud = ({
     if (!isAnimating) return;
 
     switch (activeAnimation) {
-      case "grid": {
+      case Animations.Grid: {
         refs.current.forEach((ref, i) => {
           targetVector.set(
             positionsGrid[i][0],
@@ -59,7 +72,7 @@ export const ImagesCloud = ({
         });
         break;
       }
-      case "shuffle": {
+      case Animations.Shuffle: {
         refs.current.forEach((ref, i) => {
           targetVector.set(
             randomCoordinates[i][0],
@@ -70,7 +83,7 @@ export const ImagesCloud = ({
         });
         break;
       }
-      case "random": {
+      case Animations.Random: {
         if (selectedIndex !== null) {
           const selected = refs.current[selectedIndex];
           if (selected) {
@@ -93,13 +106,11 @@ export const ImagesCloud = ({
         }
         break;
       }
-      case "whomi": {
+      case Animations.Whomi: {
         refs.current.forEach((ref) => {
           const targetPosition = ref.position.clone() as THREE.Vector3;
-
           targetPosition.setZ(farAway);
           targetPosition.add(new THREE.Vector3(0, 1, 0));
-
           ref.position.lerp(targetPosition, 0.1);
         });
         break;
@@ -174,14 +185,12 @@ export const ImagesCloud = ({
         {randomCoordinates.map((_, index) => {
           return (
             <ImagePlane
-              key={index}
-              data={imagesData[index]}
-              onClick={onClick}
-              ref={(el) => {
-                refs.current[index] = el;
-              }}
               index={index}
+              key={imagesData[index].small}
+              data={imagesData[index]}
               isDragged={isDragged}
+              onClick={imageClickHandler}
+              ref={(el) => (refs.current[index] = el)}
             />
           );
         })}

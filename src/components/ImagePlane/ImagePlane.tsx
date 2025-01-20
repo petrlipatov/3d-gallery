@@ -3,15 +3,16 @@ import { useLoader } from "@react-three/fiber";
 import { forwardRef, useState } from "react";
 import { useViewport } from "@/shared/hooks/useViewport";
 import { useSpring, config, animated } from "@react-spring/three";
+import { BASE_API_URL, IMAGES_PATH } from "@/shared/constants";
 interface ImagePlaneProps {
+  index: number;
   data: {
     large: string;
     medium: string;
     small: string;
   };
-  onClick: (index: number) => void;
   isDragged: boolean;
-  index: number;
+  onClick: (index: number) => void;
 }
 
 export const ImagePlane = forwardRef<THREE.Mesh, ImagePlaneProps>(
@@ -20,15 +21,12 @@ export const ImagePlane = forwardRef<THREE.Mesh, ImagePlaneProps>(
 
     const { width } = useViewport();
     const isMobile = width < 768;
-
     const { medium, small } = data;
 
     const texture = useLoader(
       THREE.TextureLoader,
-      `https://api.stepanplusdrawingultra.site/images${
-        isMobile ? small : medium
-      }`
-    ) as THREE.Texture;
+      `${BASE_API_URL}${IMAGES_PATH}${isMobile ? small : medium}`
+    );
 
     const { scale } = useSpring({
       scale: active ? 1.2 : 1,
@@ -43,9 +41,7 @@ export const ImagePlane = forwardRef<THREE.Mesh, ImagePlaneProps>(
           setActive(!active);
           e.stopPropagation();
         }}
-        onPointerOut={() => {
-          setActive(!active);
-        }}
+        onPointerOut={() => setActive(!active)}
         onPointerUp={(e) => {
           e.stopPropagation();
           if (!isDragged) {

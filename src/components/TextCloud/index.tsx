@@ -1,0 +1,1 @@
+export { TextsCloud } from "./TextCloud";

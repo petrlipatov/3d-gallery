@@ -13,38 +13,35 @@ import { OrbitControls, Loader, useProgress } from "@react-three/drei";
 
 import { Popup } from "../Popup";
 import { About } from "../About";
-import { TextsCloud } from "../TextCloud/TextCloud";
-import { ImagesCloud } from "../ImagesCloud/ImagesCloud";
+import { TextsCloud } from "../TextCloud";
+import { ImagesCloud } from "../ImagesCloud/";
 
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateRandomPositions } from "@/shared/helpers";
 import { imagesContext } from "@/shared/constants/contexts";
+import { Animations } from "@/shared/constants";
+import { Coordinates } from "@/shared/types";
 import s from "./CanvasScene.module.css";
 
 export function CanvasScene() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [randomCoordinates, setRandomCoordinate] = useState(null);
-  const [isControlsEnabled, setIsControlsEnabled] = useState(true);
-  const [activeAnimation, setActiveAnimation] = useState("shuffle");
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isDragged, setIsDragged] = useState(false);
-  const animationTimerRef = useRef<NodeJS.Timeout>();
+  const [isControlsEnabled, setIsControlsEnabled] = useState<boolean>(true);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [isDragged, setIsDragged] = useState<boolean>(false);
+  const [randomCoordinates, setRandomCoordinate] = useState<Coordinates | null>(
+    null
+  );
+  const [activeAnimation, setActiveAnimation] = useState<Animations>(
+    Animations.Shuffle
+  );
 
   const { width } = useViewport();
   const { loaded, total } = useProgress();
+  const animationTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const imagesData = useContext(imagesContext);
 
-  const image = searchParams.get("image");
+  const selectedImage = searchParams.get("image");
   const isMobile = width < 768;
-
-  const openImage = useCallback(
-    (image) => {
-      if (!isDragged) {
-        setSearchParams({ image });
-      }
-    },
-    [isDragged, setSearchParams]
-  );
 
   useEffect(() => {
     if (loaded === total) {
@@ -53,17 +50,35 @@ export function CanvasScene() {
       animationTimerRef.current = setInterval(() => {
         setIsAnimating(false);
       }, 4000);
+
       setRandomCoordinate(generateRandomPositions(imagesData?.length));
     }
   }, [loaded, total, imagesData]);
 
+  const clearAnimationTimer = () => {
+    if (animationTimerRef.current) {
+      clearInterval(animationTimerRef.current);
+      animationTimerRef.current = null;
+    }
+  };
+
+  const openPopup = useCallback(
+    (index: number) => {
+      if (!isDragged) setSearchParams({ image: String(index) });
+    },
+    [isDragged, setSearchParams]
+  );
+
+  const closePopup = (e: MouseEvent) => {
+    setSearchParams({});
+    e.stopPropagation();
+  };
+
   const triggerWhomiAnimation = () => {
     setIsAnimating(true);
     clearAnimationTimer();
-    animationTimerRef.current = setInterval(() => {
-      setIsAnimating(false);
-    }, 3000);
-    setActiveAnimation("whomi");
+    animationTimerRef.current = setInterval(() => setIsAnimating(false), 3000);
+    setActiveAnimation(Animations.Whomi);
   };
 
   const triggerRandomAnimation = () => {
@@ -73,43 +88,29 @@ export function CanvasScene() {
       setIsAnimating(false);
       setActiveAnimation(null);
     }, 3000);
-    setActiveAnimation("random");
+    setActiveAnimation(Animations.Random);
   };
 
-  const clearAnimationTimer = () => {
-    if (animationTimerRef.current) {
-      clearInterval(animationTimerRef.current);
-      animationTimerRef.current = null;
-    }
-  };
-
-  const closeImage = (e: MouseEvent) => {
-    setSearchParams({});
-    e.stopPropagation();
-  };
-
-  const toggleShuffle = () => {
+  const triggerShuffleAnimation = () => {
     setIsAnimating(true);
     clearAnimationTimer();
     animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
-    if (activeAnimation === "shuffle") {
-      const data = generateRandomPositions(imagesData.length);
-      setRandomCoordinate(data);
+    if (activeAnimation === Animations.Shuffle) {
+      setRandomCoordinate(generateRandomPositions(imagesData.length));
     }
-    setActiveAnimation("shuffle");
+    setActiveAnimation(Animations.Shuffle);
   };
 
-  const toggleByDate = () => {
+  const triggerByDateAnimation = () => {
     setIsAnimating(true);
     clearAnimationTimer();
     animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
-    setActiveAnimation("grid");
+    setActiveAnimation(Animations.Grid);
   };
 
   return (
     imagesData && (
-      <div id="canvas-container" className={s.canvasContainer}>
-        {image && <Popup image={image} onClose={closeImage} />}
+      <div className={s.canvasContainer}>
         <Canvas
           camera={{ fov: 75, position: [0, 0, isMobile ? 20 : 15], near: 1 }}
         >
@@ -119,9 +120,9 @@ export function CanvasScene() {
               isAnimating={isAnimating}
               activeAnimation={activeAnimation}
               randomCoordinates={randomCoordinates}
-              onClick={openImage} // cached
-              setIsControlsEnabled={setIsControlsEnabled} // cached
-              setIsDragged={setIsDragged} // cached
+              imageClickHandler={openPopup}
+              setIsControlsEnabled={setIsControlsEnabled}
+              setIsDragged={setIsDragged}
             />
             <TextsCloud activeAnimation={activeAnimation} />
             <About
@@ -159,7 +160,7 @@ export function CanvasScene() {
             }`}
             onClick={triggerRandomAnimation}
           >
-            random
+            {Animations.Random}
             <div className={s.buttonLoader} />
           </button>
           <button
@@ -168,18 +169,18 @@ export function CanvasScene() {
                 ? s.buttonAnimation
                 : ""
             }`}
-            onClick={toggleShuffle}
+            onClick={triggerShuffleAnimation}
           >
-            shuffle
+            {Animations.Shuffle}
             <div className={s.buttonLoader} />
           </button>
           <button
             className={`${s.button} ${
               isAnimating && activeAnimation === "grid" ? s.buttonAnimation : ""
             }`}
-            onClick={toggleByDate}
+            onClick={triggerByDateAnimation}
           >
-            grid
+            {Animations.Grid}
             <div className={s.buttonLoader} />
           </button>
 
@@ -191,10 +192,12 @@ export function CanvasScene() {
             }`}
             onClick={triggerWhomiAnimation}
           >
-            whomi
+            {Animations.Whomi}
             <div className={s.buttonLoader} />
           </button>
         </div>
+
+        {selectedImage && <Popup image={selectedImage} onClose={closePopup} />}
       </div>
     )
   );
