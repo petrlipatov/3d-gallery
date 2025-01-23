@@ -7,7 +7,7 @@ export const viewportContext = createContext<{ width: number; height: number }>(
   }
 );
 
-type ImageData = {
+export type ImageData = {
   small: string;
   medium: string;
   large: string;
