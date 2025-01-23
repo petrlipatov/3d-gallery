@@ -15,6 +15,7 @@ import { Popup } from "../Popup";
 import { About } from "../About";
 import { TextsCloud } from "../TextCloud";
 import { ImagesCloud } from "../ImagesCloud/";
+import { Button } from "../Button";
 
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateRandomPositions } from "@/shared/helpers";
@@ -22,8 +23,6 @@ import { imagesContext } from "@/shared/constants/contexts";
 import { Animations } from "@/shared/constants";
 import { Coordinates } from "@/shared/types";
 import s from "./CanvasScene.module.css";
-import { Button } from "../Button";
-import { Spinner } from "../Spinner/Spinner";
 
 export function CanvasScene() {
   const [searchParams, setSearchParams] = useSearchParams();
