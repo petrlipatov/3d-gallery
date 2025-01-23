@@ -22,6 +22,8 @@ import { imagesContext } from "@/shared/constants/contexts";
 import { Animations } from "@/shared/constants";
 import { Coordinates } from "@/shared/types";
 import s from "./CanvasScene.module.css";
+import { Button } from "../Button";
+import { Spinner } from "../Spinner/Spinner";
 
 export function CanvasScene() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -152,49 +154,35 @@ export function CanvasScene() {
         <Loader />
 
         <div className={s.controlsContainer}>
-          <button
-            className={`${s.button} ${
-              isAnimating && activeAnimation === "random"
-                ? s.buttonAnimation
-                : ""
-            }`}
+          <Button
             onClick={triggerRandomAnimation}
+            // isLoading={true}
+            isLoading={isAnimating && activeAnimation === Animations.Random}
+            spinner={<Spinner />}
           >
             {Animations.Random}
-            <div className={s.buttonLoader} />
-          </button>
-          <button
-            className={`${s.button} ${
-              isAnimating && activeAnimation === "shuffle"
-                ? s.buttonAnimation
-                : ""
-            }`}
+          </Button>
+
+          <Button
             onClick={triggerShuffleAnimation}
+            isLoading={isAnimating && activeAnimation === Animations.Shuffle}
           >
             {Animations.Shuffle}
-            <div className={s.buttonLoader} />
-          </button>
-          <button
-            className={`${s.button} ${
-              isAnimating && activeAnimation === "grid" ? s.buttonAnimation : ""
-            }`}
+          </Button>
+
+          <Button
             onClick={triggerByDateAnimation}
+            isLoading={isAnimating && activeAnimation === Animations.Grid}
           >
             {Animations.Grid}
-            <div className={s.buttonLoader} />
-          </button>
+          </Button>
 
-          <button
-            className={`${s.button} ${
-              isAnimating && activeAnimation === "whomi"
-                ? s.buttonAnimation
-                : ""
-            }`}
+          <Button
             onClick={triggerWhomiAnimation}
+            isLoading={isAnimating && activeAnimation === Animations.Whomi}
           >
             {Animations.Whomi}
-            <div className={s.buttonLoader} />
-          </button>
+          </Button>
         </div>
 
         {selectedImage && <Popup image={selectedImage} onClose={closePopup} />}
