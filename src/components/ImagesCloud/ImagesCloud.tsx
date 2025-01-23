@@ -40,7 +40,7 @@ export const ImagesCloud = ({
 }: Props) => {
   const refs = useRef([]);
   const { camera, gl } = useThree();
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const imagesData = useContext(imagesContext);
   const { width } = useViewport();
   const farAway = width < 768 ? 20 : 15;
@@ -68,6 +68,7 @@ export const ImagesCloud = ({
             positionsGrid[i][1],
             positionsGrid[i][2]
           );
+
           ref.position.lerp(targetVector, 0.08);
         });
         break;
@@ -163,10 +164,10 @@ export const ImagesCloud = ({
       dragControls.addEventListener("dragend", handleDragEnd);
 
       return () => {
+        clearTimeout(dragStartTimerRef.current);
+        clearTimeout(dragEndTimerRef.current);
         dragControls.removeEventListener("drag", handleDrag);
         dragControls.removeEventListener("dragend", handleDragEnd);
-        if (dragStartTimerRef.current) clearTimeout(dragStartTimerRef.current);
-        if (dragEndTimerRef.current) clearTimeout(dragEndTimerRef.current);
         dragControls.dispose();
       };
     },

@@ -2,7 +2,6 @@
   position: relative;
   width: 100dvw;
   height: 100dvh;
-  /* background-color: black; */
   background: linear-gradient(#959595, #a3a3a3);
   overflow: hidden;
 }
@@ -39,20 +38,10 @@
   color: #222222;
   background-color: #ffffff;
   border: 1px solid #222222;
-  /* border-radius: 8px; */
   font-family: "Helvetica Neue", sans-serif;
-  /* padding: 13px 23px; */
   text-decoration: none;
-  /* font-size: 16px; */
-  /* font-weight: 600; */
   line-height: 20px;
 }
-
-/* @media (max-width: 480px) {
-    .button {
-      font-size: 12px;
-    }
-  } */
 
 .buttonAnimation {
   cursor: wait;
@@ -67,23 +56,22 @@
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
-  opacity: 0; /* Невидимый элемент */
-  visibility: hidden; /* Скрыт из DOM */
-  transition: opacity 2s ease-in, visibility 0s ease 2s; /* Условие появления */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 2s ease-in, visibility 0s ease 2s;
 }
 
 .contactsContainer.visible {
-  opacity: 1; /* Элемент видим */
-  visibility: visible; /* Отображается */
-  transition: opacity 2s ease-out, visibility 0s ease 0s; /* Условие исчезновения */
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 2s ease-out, visibility 0s ease 0s;
 }
 
 .fadeIn {
   opacity: 0;
-  animation: fadeIn 3s forwards; /* Задержка анимации 3 секунды */
+  animation: fadeIn 3s forwards;
 }
 
-/* Анимация плавного появления */
 @keyframes fadeIn {
   0% {
     opacity: 0;
