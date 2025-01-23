@@ -155,9 +155,7 @@ export function CanvasScene() {
         <div className={s.controlsContainer}>
           <Button
             onClick={triggerRandomAnimation}
-            // isLoading={true}
             isLoading={isAnimating && activeAnimation === Animations.Random}
-            spinner={<Spinner />}
           >
             {Animations.Random}
           </Button>
