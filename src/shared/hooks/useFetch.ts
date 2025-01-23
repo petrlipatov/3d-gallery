@@ -34,7 +34,6 @@ export function useFetch<T = unknown>(
       const jsonData = (await response.json()) as T;
       setData(jsonData);
     } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
       setError(error as Error);
     } finally {
       setIsLoading(false);
@@ -46,14 +45,6 @@ export function useFetch<T = unknown>(
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
-  useEffect(() => {
-    console.log({
-      data,
-      isLoading,
-      error,
-    });
-  }, [data, isLoading, error]);
 
   return { data, isLoading, error };
 }
