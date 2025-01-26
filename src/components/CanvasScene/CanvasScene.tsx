@@ -44,17 +44,19 @@ export function CanvasScene() {
   const selectedImage = searchParams.get("image");
   const isMobile = width < 768;
 
-  useEffect(() => {
-    if (loaded === total) {
-      setIsAnimating(true);
-      clearAnimationTimer();
-      animationTimerRef.current = setInterval(() => {
-        setIsAnimating(false);
-      }, 4000);
-
-      setRandomCoordinate(generateRandomPositions(imagesData?.length));
-    }
-  }, [loaded, total, imagesData]);
+  useEffect(
+    function setCoordinatesWhenTexuresReady() {
+      if (loaded === total) {
+        setIsAnimating(true);
+        clearAnimationTimer();
+        animationTimerRef.current = setInterval(() => {
+          setIsAnimating(false);
+        }, 4000);
+        setRandomCoordinate(generateRandomPositions(imagesData?.length));
+      }
+    },
+    [loaded, total, imagesData]
+  );
 
   const clearAnimationTimer = () => {
     if (animationTimerRef.current) {

@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 :root {
   background-color: #242424;
   overflow: hidden;
@@ -16,4 +20,7 @@ body {
   margin: 0;
   overflow: hidden;
   font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
 }

@@ -46,17 +46,17 @@ export const About = ({ activeAnimation, setIsControlsEnabled }) => {
       <div
         style={{
           color: "white",
-          width: "300px",
+          width: "360px",
           textDecoration: "none",
+          lineHeight: "21px",
         }}
       >
-        Hey! My name is Stepan Lipatov. I am a drawing graphic designer and
-        educator.
+        Hey! My name is Stepan Lipatov.
+        <br />I am a drawing graphic designer and educator.
+        <br />
         <br />
         On this web page, you could see almost 200 drawings I did in the last
-        two years.
-        <br />
-        That's how I draw when I don't have an assignment.
+        two years. That's how <br />I draw when I don't have an assignment.
         <br />
         <br />
         You could check my other projects on Instagram{" "}
@@ -67,11 +67,10 @@ export const About = ({ activeAnimation, setIsControlsEnabled }) => {
         <a href="https://stepanlee.cargo.site" target="_blank">
           https://stepanlee.cargo.site
         </a>
-        .
         <br />
         <br />
         If you want to contact me, here is my email:{" "}
-        <a href="mailto:stepanlipatov@gmail.com">stepanlipatov@gmail.com</a>.
+        <a href="mailto:stepanlipatov@gmail.com">stepanlipatov@gmail.com</a>
       </div>
     </Html>
   );

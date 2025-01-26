@@ -1,9 +1,9 @@
 import { useState } from "react";
+import s from "./Admin.module.css";
 
 export const Admin = () => {
   const [file, setFile] = useState<File | null>(null);
 
-  // Обработчик изменения файла
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = e.target.files ? e.target.files[0] : null;
     if (selectedFile) {
@@ -11,7 +11,6 @@ export const Admin = () => {
     }
   }
 
-  // Обработчик отправки формы
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -24,10 +23,13 @@ export const Admin = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:3300/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://api.stepanplusdrawingultra.site/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         console.log("File uploaded successfully");
@@ -40,20 +42,27 @@ export const Admin = () => {
   }
 
   return (
-    <form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="file">Choose file to upload</label>
-        <input
-          name="file"
-          type="file"
-          accept="image/jpeg"
-          multiple
-          onChange={handleFileChange}
-        />
-      </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-    </form>
+    <div className={s.page}>
+      <form
+        method="post"
+        encType="multipart/form-data"
+        onSubmit={handleSubmit}
+        className={s.form}
+      >
+        <div>
+          <label htmlFor="file">Choose file to upload</label>
+          <input
+            name="file"
+            type="file"
+            accept="image/jpeg"
+            multiple
+            onChange={handleFileChange}
+          />
+        </div>
+        <div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
   );
 };
