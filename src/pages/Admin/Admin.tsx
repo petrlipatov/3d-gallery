@@ -24,7 +24,7 @@ export const Admin = () => {
 
     try {
       const response = await fetch(
-        "https://api.stepanplusdrawingultra.site/upload",
+        "https://api.stepanplusdrawingultra.site/images",
         {
           method: "POST",
           body: formData,
