@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import s from "./Admin.module.css";
 
 export const Admin = () => {
@@ -7,6 +7,7 @@ export const Admin = () => {
     "idle" | "loading" | "error" | "success"
   >("idle");
   const [message, setMessage] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = e.target.files ? e.target.files[0] : null;
@@ -39,13 +40,12 @@ export const Admin = () => {
       );
 
       if (response.ok) {
-        setFile(null); // Очистить инпут после успешной загрузки
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        setFile(null);
         setStatus("success");
         setMessage("File uploaded successfully!");
-      } else {
-        setFile(null);
-        setStatus("error");
-        setMessage("Failed to upload file. Please try again.");
       }
     } catch (error) {
       console.error("Error during file upload:", error);
@@ -67,13 +67,14 @@ export const Admin = () => {
             Choose file to upload:
           </label>
           <input
+            ref={fileInputRef}
             className={s.input}
             name="file"
             type="file"
             accept="image/jpeg"
             multiple
             onChange={handleFileChange}
-            disabled={status === "loading"} // Отключить инпут во время загрузки
+            disabled={status === "loading"}
           />
         </div>
 
