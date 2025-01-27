@@ -1,14 +1,89 @@
+/* Общие стили для страницы */
 .page {
-  width: 100%;
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid red;
+  height: 100vh;
+  background-color: #f0f4f8;
+  font-family: "Arial", sans-serif;
 }
 
+/* Стили для формы */
 .form {
-  width: 500px;
-  height: 500px;
-  background-color: antiquewhite;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Стили для контейнера ввода */
+.inputContainer {
+  margin-bottom: 20px;
+}
+
+/* Стили для метки */
+.label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Стили для инпута файла */
+.input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fafafa;
+  cursor: pointer;
+}
+
+.input:focus {
+  border-color: #66afe9;
+  outline: none;
+}
+
+.button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #45a049;
+}
+
+.button:active {
+  background-color: #388e3c;
+}
+
+.status {
+  font-size: 16px;
+  color: #ffa500; /* Цвет для загрузки */
+  margin-top: 20px;
+}
+
+.statusSuccess {
+  font-size: 16px;
+  color: #4caf50; /* Зеленый для успеха */
+  margin-top: 20px;
+}
+
+.statusError {
+  font-size: 16px;
+  color: #f44336; /* Красный для ошибки */
+  margin-top: 20px;
 }
