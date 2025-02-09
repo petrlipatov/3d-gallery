@@ -14,6 +14,7 @@ When manipulating hundreds of objects in 3D space, libraries (eg GSAP, React-Spr
 - Multiple sorting algorithms with lerp animations
 - Drag & Drop elements
 - Hires images available by clicking
+- Upload images via authorized admin panel
 
 ## Tech (Client)
 
