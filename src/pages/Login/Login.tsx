@@ -2,6 +2,7 @@ import { authContext } from "@/shared/constants/contexts";
 import { observer } from "mobx-react-lite"; // Правильный импорт
 
 import React, { useContext, useEffect, useState } from "react";
+import { Navigate } from "react-router";
 
 const LoginComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -14,6 +15,10 @@ const LoginComponent = () => {
       store.checkAuth();
     }
   }, [store]);
+
+  if (store.isAuth) {
+    return <Navigate to="/admin" replace />;
+  }
 
   return (
     <div>
