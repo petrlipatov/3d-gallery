@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
+import { IMAGES_PATH } from "@/shared/constants";
 import s from "./Admin.module.css";
+import { api } from "@/shared/http";
 
 export const Admin = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -31,15 +33,10 @@ export const Admin = () => {
       setStatus("loading");
       setMessage("");
 
-      const response = await fetch(
-        "https://api.stepanplusdrawingultra.site/images",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await api.post(IMAGES_PATH, formData);
+      console.log("response", response);
 
-      if (response.ok) {
+      if (response.status === 200) {
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
