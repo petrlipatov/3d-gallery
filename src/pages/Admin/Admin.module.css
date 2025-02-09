@@ -87,3 +87,12 @@
   color: #f44336; /* Красный для ошибки */
   margin-top: 20px;
 }
+
+.logoutButton {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  background-color: #f44336;
+  color: white;
+  font-weight: 600;
+}

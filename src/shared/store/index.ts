@@ -25,6 +25,7 @@ class Store {
       localStorage.setItem("token", res.data.accessToken);
       this.setAuth(true);
       this.setUser(res.data.user);
+      console.log("isAuth", this.isAuth);
     } catch (err) {
       console.log(err);
     }
@@ -33,9 +34,10 @@ class Store {
   async logout() {
     try {
       await AuthService.logout();
-      localStorage.removeItemItem("token");
+      localStorage.removeItem("token");
       this.setAuth(false);
       this.setUser({});
+      console.log("isAuth", this.isAuth);
     } catch (err) {
       console.log(err);
     }

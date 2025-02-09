@@ -7,10 +7,8 @@ const ProtectedRoute = observer(() => {
   const store = useContext(authContext);
 
   if (!store.isAuth) {
-    console.log("Outlet НЕ авторизирован");
     return <Navigate to="/login" replace />;
   }
-  console.log("Outlet авторизирован");
   return <Outlet />;
 });
 

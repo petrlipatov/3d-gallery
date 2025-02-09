@@ -1,7 +1,7 @@
 import { authContext } from "@/shared/constants/contexts";
 import { observer } from "mobx-react-lite"; // Правильный импорт
 
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router";
 
 const LoginComponent = () => {

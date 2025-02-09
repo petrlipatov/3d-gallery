@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { IMAGES_PATH } from "@/shared/constants";
-import s from "./Admin.module.css";
 import { api } from "@/shared/http";
+import { Button } from "@/components/Button";
+import s from "./Admin.module.css";
+import { authContext } from "@/shared/constants/contexts";
 
 export const Admin = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -10,6 +12,8 @@ export const Admin = () => {
   >("idle");
   const [message, setMessage] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const store = useContext(authContext);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = e.target.files ? e.target.files[0] : null;
@@ -51,8 +55,15 @@ export const Admin = () => {
     }
   }
 
+  function handleLogout() {
+    store.logout();
+  }
+
   return (
     <div className={s.page}>
+      <Button className={s.logoutButton} onClick={handleLogout}>
+        Logout
+      </Button>
       <form
         method="post"
         encType="multipart/form-data"
