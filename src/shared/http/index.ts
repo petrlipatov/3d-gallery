@@ -13,21 +13,25 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (config) => {
-    return config;
-  },
+  (response) => response,
   async (err) => {
     const originalRequest = err.config;
-    if (err.response && err.response?.status === 401) {
+    if (
+      err.response &&
+      err.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
       try {
         const res = await axios.get<AuthResponse>(`${BASE_API_URL}/refresh`, {
           withCredentials: true,
         });
         localStorage.setItem("token", res.data.accessToken);
         return api.request(originalRequest);
-      } catch (e) {
-        console.log(e);
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
       }
     }
+    return Promise.reject(err);
   }
 );

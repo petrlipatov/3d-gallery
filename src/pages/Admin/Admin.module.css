@@ -80,12 +80,6 @@
   margin-top: 20px;
 }
 
-.statusError {
-  font-size: 16px;
-  color: #f44336;
-  margin-top: 20px;
-}
-
 .logoutButton {
   position: absolute;
   right: 30px;

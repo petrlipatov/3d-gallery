@@ -10,6 +10,7 @@ class Store {
   status: "idle" | "loading" | "ok" | "error" = "idle";
   isAuthChecking: boolean = true;
   message: string | null = null;
+  private errorTimeout: NodeJS.Timeout | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -27,8 +28,20 @@ class Store {
     this.user = user;
   }
 
-  setMessage(message: string | null) {
+  setMessage(message: string, autoClear: boolean = true) {
     this.message = message;
+    if (!autoClear) return;
+    clearTimeout(this.errorTimeout);
+    this.errorTimeout = setTimeout(() => {
+      this.clearError();
+    }, 3000);
+  }
+
+  clearError() {
+    if (this.errorTimeout) clearTimeout(this.errorTimeout);
+    this.message = null;
+    this.status = "idle";
+    this.errorTimeout = null;
   }
 
   setIsAuthChecking(status: boolean) {
@@ -45,9 +58,13 @@ class Store {
       this.setStatus("ok");
     } catch (err) {
       this.setStatus("error");
-      this.setMessage(err);
-      console.log("err", err);
-      // this.setError(err);
+      if (axios.isAxiosError(err)) {
+        if (err.response.status === 400) {
+          this.setMessage("Incorrect login or password.");
+        }
+      } else {
+        this.setMessage("Unexpected error: Reload the page and try again.");
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from "react";
 import { IMAGES_PATH } from "@/shared/constants";
 import { api } from "@/shared/http";
-import { Button } from "@/components/Button";
+import { Button } from "@/shared/ui/Button";
 import { authContext } from "@/shared/constants/contexts";
 import s from "./Admin.module.css";
 

@@ -37,12 +37,13 @@ const LoginComponent = () => {
           className={s.form}
         >
           <div className={s.inputContainer}>
-            <label htmlFor="password" className={s.label}>
+            <label htmlFor="email" className={s.label}>
               Email:
             </label>
             <input
               placeholder="Email"
               type="email"
+              id="email"
               className={s.input}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -57,6 +58,7 @@ const LoginComponent = () => {
             <input
               placeholder="Password"
               type="password"
+              id="password"
               className={s.input}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -67,6 +69,9 @@ const LoginComponent = () => {
           <button className={s.button} type="submit">
             Login
           </button>
+          {store.status === "error" && (
+            <p className={s.statusError}>{store.message}</p>
+          )}
         </form>
       )}
     </div>

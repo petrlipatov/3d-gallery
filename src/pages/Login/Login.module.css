@@ -55,3 +55,9 @@
   display: block;
   margin-bottom: 8px;
 }
+
+.statusError {
+  font-size: 16px;
+  color: #f44336;
+  margin-top: 20px;
+}
