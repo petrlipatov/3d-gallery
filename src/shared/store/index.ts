@@ -7,6 +7,10 @@ import { BASE_API_URL } from "../constants";
 class Store {
   user = {};
   isAuth = false;
+  status: "idle" | "loading" | "ok" | "error" = "idle";
+  isAuthChecking: boolean = true;
+  message: string | null = null;
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -15,19 +19,35 @@ class Store {
     this.isAuth = bool;
   }
 
+  setStatus(status: "ok" | "idle" | "error" | "loading") {
+    this.status = status;
+  }
+
   setUser(user) {
     this.user = user;
   }
 
+  setMessage(message: string | null) {
+    this.message = message;
+  }
+
+  setIsAuthChecking(status: boolean) {
+    this.isAuthChecking = status;
+  }
+
   async login(email, password) {
     try {
+      this.setStatus("loading");
       const res = await AuthService.login(email, password);
       localStorage.setItem("token", res.data.accessToken);
       this.setAuth(true);
       this.setUser(res.data.user);
-      console.log("isAuth", this.isAuth);
+      this.setStatus("ok");
     } catch (err) {
-      console.log(err);
+      this.setStatus("error");
+      this.setMessage(err);
+      console.log("err", err);
+      // this.setError(err);
     }
   }
 
@@ -37,20 +57,22 @@ class Store {
       localStorage.removeItem("token");
       this.setAuth(false);
       this.setUser({});
-      console.log("isAuth", this.isAuth);
     } catch (err) {
-      console.log(err);
+      this.setStatus("error");
+      this.setMessage(err);
     }
   }
 
   async checkAuth() {
     try {
+      this.setStatus("loading");
       const res = await axios.get<AuthResponse>(`${BASE_API_URL}/refresh`, {
         withCredentials: true,
       });
       localStorage.setItem("token", res.data.accessToken);
       this.setAuth(true);
       this.setUser(res.data.user);
+      this.setStatus("ok");
     } catch (err) {
       console.log(err);
     }

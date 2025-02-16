@@ -18,7 +18,7 @@ api.interceptors.response.use(
   },
   async (err) => {
     const originalRequest = err.config;
-    if (err.response.status === 401) {
+    if (err.response && err.response?.status === 401) {
       try {
         const res = await axios.get<AuthResponse>(`${BASE_API_URL}/refresh`, {
           withCredentials: true,

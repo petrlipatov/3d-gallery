@@ -13,6 +13,8 @@ const LoginComponent = () => {
   useEffect(() => {
     if (localStorage.getItem("token")) {
       store.checkAuth();
+    } else {
+      store.setIsAuthChecking(false);
     }
   }, [store]);
 
@@ -22,50 +24,50 @@ const LoginComponent = () => {
 
   return (
     <div className={s.page}>
-      <form
-        name="login"
-        onSubmit={(e: FormEvent<HTMLFormElement>): void => {
-          e.preventDefault();
-          store.login(email, password);
-        }}
-        className={s.form}
-      >
-        <div className={s.inputContainer}>
-          <label htmlFor="password" className={s.label}>
-            Email:
-          </label>
-          <input
-            placeholder="Email"
-            type="email"
-            className={s.input}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-            required
-          />
-        </div>
-        <div className={s.inputContainer}>
-          <label htmlFor="password" className={s.label}>
-            Password:
-          </label>
-          <input
-            placeholder="Password"
-            type="password"
-            className={s.input}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="on"
-            required
-          />
-        </div>
-        <button
-          className={s.button}
-          type="submit"
-          // disabled={status === "loading"}
+      {store.isAuthChecking ? (
+        <div>Loading</div>
+      ) : (
+        <form
+          name="login"
+          onSubmit={(e: FormEvent<HTMLFormElement>): void => {
+            e.preventDefault();
+            store.login(email, password);
+          }}
+          className={s.form}
         >
-          Login
-        </button>
-      </form>
+          <div className={s.inputContainer}>
+            <label htmlFor="password" className={s.label}>
+              Email:
+            </label>
+            <input
+              placeholder="Email"
+              type="email"
+              className={s.input}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              required
+            />
+          </div>
+          <div className={s.inputContainer}>
+            <label htmlFor="password" className={s.label}>
+              Password:
+            </label>
+            <input
+              placeholder="Password"
+              type="password"
+              className={s.input}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="on"
+              required
+            />
+          </div>
+          <button className={s.button} type="submit">
+            Login
+          </button>
+        </form>
+      )}
     </div>
   );
 };
