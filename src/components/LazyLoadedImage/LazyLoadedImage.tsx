@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import s from "./LazyLoadedImage.module.css";
+import { Loader } from "@/shared/ui/Loader";
 
 export function LazyLoadedImage({ src, alt }) {
   const [loadedSrc, setLoadedSrc] = useState(null);
@@ -11,7 +11,7 @@ export function LazyLoadedImage({ src, alt }) {
   }, [src]);
 
   if (!loadedSrc) {
-    return <span className={s.loader}/>;
+    return <Loader />;
   }
 
   return <img src={loadedSrc} alt={alt} />;

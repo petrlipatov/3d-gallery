@@ -2,6 +2,7 @@ import { authContext } from "@/shared/constants/contexts";
 import { observer } from "mobx-react-lite"; // Правильный импорт
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router";
+import { Loader } from "@/shared/ui/Loader";
 import s from "./Login.module.css";
 
 const LoginComponent = () => {
@@ -25,7 +26,7 @@ const LoginComponent = () => {
   return (
     <div className={s.page}>
       {store.isAuthChecking ? (
-        <div>Loading</div>
+        <Loader />
       ) : (
         <form
           name="login"
