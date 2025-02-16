@@ -23,7 +23,6 @@
   margin-bottom: 20px;
 }
 
-/* Стили для метки */
 .label {
   font-size: 16px;
   font-weight: 600;
@@ -32,7 +31,6 @@
   margin-bottom: 8px;
 }
 
-/* Стили для инпута файла */
 .input {
   width: 100%;
   padding: 10px;
@@ -78,13 +76,13 @@
 
 .statusSuccess {
   font-size: 16px;
-  color: #4caf50; /* Зеленый для успеха */
+  color: #4caf50;
   margin-top: 20px;
 }
 
 .statusError {
   font-size: 16px;
-  color: #f44336; /* Красный для ошибки */
+  color: #f44336;
   margin-top: 20px;
 }
 
@@ -95,4 +93,10 @@
   background-color: #f44336;
   color: white;
   font-weight: 600;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }

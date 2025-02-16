@@ -2,8 +2,8 @@ import { useContext, useRef, useState } from "react";
 import { IMAGES_PATH } from "@/shared/constants";
 import { api } from "@/shared/http";
 import { Button } from "@/components/Button";
-import s from "./Admin.module.css";
 import { authContext } from "@/shared/constants/contexts";
+import s from "./Admin.module.css";
 
 export const Admin = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -38,7 +38,6 @@ export const Admin = () => {
       setMessage("");
 
       const response = await api.post(IMAGES_PATH, formData);
-      console.log("response", response);
 
       if (response.status === 200) {
         if (fileInputRef.current) {
