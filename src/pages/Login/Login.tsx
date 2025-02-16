@@ -31,6 +31,9 @@ const LoginComponent = () => {
         className={s.form}
       >
         <div className={s.inputContainer}>
+          <label htmlFor="password" className={s.label}>
+            Email:
+          </label>
           <input
             placeholder="Email"
             type="email"
@@ -42,6 +45,9 @@ const LoginComponent = () => {
           />
         </div>
         <div className={s.inputContainer}>
+          <label htmlFor="password" className={s.label}>
+            Password:
+          </label>
           <input
             placeholder="Password"
             type="password"
