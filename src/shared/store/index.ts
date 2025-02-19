@@ -3,11 +3,13 @@ import { AuthService } from "../services/AuthService";
 import axios from "axios";
 import { AuthResponse } from "../models/response/AuthResponse";
 import { BASE_API_URL } from "../constants";
+import { Status } from "../constants/auth-store";
+import { IUser } from "../models/IUser";
 
 class Store {
-  user = {};
+  user: IUser | null = null;
   isAuth = false;
-  status: "idle" | "loading" | "ok" | "error" = "idle";
+  status: Status = Status.Idle;
   isAuthChecking: boolean = true;
   message: string | null = null;
   private errorTimeout: NodeJS.Timeout | null = null;
@@ -20,7 +22,7 @@ class Store {
     this.isAuth = bool;
   }
 
-  setStatus(status: "ok" | "idle" | "error" | "loading") {
+  setStatus(status: Status) {
     this.status = status;
   }
 
@@ -40,7 +42,7 @@ class Store {
   clearError() {
     if (this.errorTimeout) clearTimeout(this.errorTimeout);
     this.message = null;
-    this.status = "idle";
+    this.status = Status.Idle;
     this.errorTimeout = null;
   }
 
@@ -50,14 +52,14 @@ class Store {
 
   async login(email, password) {
     try {
-      this.setStatus("loading");
+      this.setStatus(Status.Loading);
       const res = await AuthService.login(email, password);
       localStorage.setItem("token", res.data.accessToken);
       this.setAuth(true);
       this.setUser(res.data.user);
-      this.setStatus("ok");
+      this.setStatus(Status.Ok);
     } catch (err) {
-      this.setStatus("error");
+      this.setStatus(Status.Error);
       if (axios.isAxiosError(err)) {
         if (err.response.status === 400) {
           this.setMessage("Incorrect login or password.");
@@ -75,21 +77,21 @@ class Store {
       this.setAuth(false);
       this.setUser({});
     } catch (err) {
-      this.setStatus("error");
+      this.setStatus(Status.Error);
       this.setMessage(err);
     }
   }
 
   async checkAuth() {
     try {
-      this.setStatus("loading");
+      this.setStatus(Status.Loading);
       const res = await axios.get<AuthResponse>(`${BASE_API_URL}/refresh`, {
         withCredentials: true,
       });
       localStorage.setItem("token", res.data.accessToken);
       this.setAuth(true);
       this.setUser(res.data.user);
-      this.setStatus("ok");
+      this.setStatus(Status.Ok);
     } catch (err) {
       console.log(err);
     }
