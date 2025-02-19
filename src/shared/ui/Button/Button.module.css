@@ -18,13 +18,14 @@
   opacity: 0.6;
 }
 
-.primary {
-  background-color: white;
-  color: black;
-}
+@media (hover: hover) and (pointer: fine) {
+  .primary:not(:disabled):hover {
+    background-color: #6c757d;
+  }
 
-.primary:hover:not(:disabled):not([aria-disabled="true"]) {
-  background-color: #6c757d;
+  .secondary:not(:disabled):hover {
+    background-color: #45a049;
+  }
 }
 
 .sm {
@@ -44,6 +45,10 @@
 
 .loading {
   pointer-events: none;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 .content {
@@ -76,4 +81,17 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.primary {
+  background-color: white;
+  color: black;
+}
+
+.secondary {
+  width: 100%;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 4px;
+  padding: 12px;
 }

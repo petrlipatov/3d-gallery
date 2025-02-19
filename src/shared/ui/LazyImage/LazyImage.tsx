@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Loader } from "@/shared/ui/Loader";
 
-export function LazyLoadedImage({ src, alt }) {
+export function LazyImage({ src, alt }) {
   const [loadedSrc, setLoadedSrc] = useState(null);
 
   useEffect(() => {

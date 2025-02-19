@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { LazyLoadedImage } from "@components/LazyLoadedImage";
+import { LazyImage } from "@/shared/ui/LazyImage";
 import { useContext } from "react";
 import { imagesContext } from "@/shared/constants/contexts";
 import s from "./Popup.module.css";
@@ -11,7 +11,7 @@ export function Popup({ image, onClose }) {
   return createPortal(
     <div className={s.popup} onClick={onClose}>
       <div className={s.popupContent}>
-        <LazyLoadedImage
+        <LazyImage
           src={`https://api.stepanplusdrawingultra.site/images${imageData.large}`}
           alt="selected-image"
         />

@@ -21,6 +21,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "primary",
       size = "md",
       type = "button",
+
+      spinner,
+
       ...rest
     },
     ref
@@ -46,12 +49,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {...rest}
       >
-        {isLoading ? (
+        <span className={classNames(s.content, { [s.hidden]: isLoading })}>
+          {children}
+        </span>
+        {isLoading && (
           <div className={s.spinnerOverlay}>
-            <div className={s.spinner} />
+            <div className={s.spinner}>{spinner || <div />}</div>
           </div>
-        ) : (
-          <span className={s.content}>{children}</span>
         )}
       </button>
     );

@@ -67,7 +67,7 @@ const LoginComponent = () => {
               required
             />
           </div>
-          <Button className={s.button} type="submit">
+          <Button variant={"secondary"} className={s.button} type="submit">
             Login
           </Button>
 

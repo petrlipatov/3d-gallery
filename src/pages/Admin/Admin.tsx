@@ -86,8 +86,12 @@ export const Admin = () => {
             required
           />
         </div>
-        <Button className={s.button} type="submit">
-          {status === "loading" ? "Uploading..." : "Upload"}
+        <Button
+          variant="secondary"
+          type="submit"
+          isLoading={status === "loading"}
+        >
+          Upload
         </Button>
         {status === "success" && <p className={s.statusSuccess}>{message}</p>}
         {status === "error" && <p className={s.statusError}>{message}</p>}
