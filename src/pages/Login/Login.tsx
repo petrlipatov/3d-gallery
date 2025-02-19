@@ -4,6 +4,7 @@ import { FormEvent, useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import { Loader } from "@/shared/ui/Loader";
 import s from "./Login.module.css";
+import { Button } from "@/shared/ui/Button";
 
 const LoginComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -66,9 +67,10 @@ const LoginComponent = () => {
               required
             />
           </div>
-          <button className={s.button} type="submit">
+          <Button className={s.button} type="submit">
             Login
-          </button>
+          </Button>
+
           {store.status === "error" && (
             <p className={s.statusError}>{store.message}</p>
           )}

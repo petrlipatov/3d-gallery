@@ -82,16 +82,12 @@ export const Admin = () => {
             multiple
             onChange={handleFileChange}
             disabled={status === "loading"}
+            required
           />
         </div>
-
-        <button
-          className={s.button}
-          type="submit"
-          disabled={status === "loading"}
-        >
+        <Button className={s.button} type="submit">
           {status === "loading" ? "Uploading..." : "Upload"}
-        </button>
+        </Button>
         {status === "success" && <p className={s.statusSuccess}>{message}</p>}
         {status === "error" && <p className={s.statusError}>{message}</p>}
       </form>
