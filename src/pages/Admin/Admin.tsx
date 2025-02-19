@@ -76,6 +76,7 @@ export const Admin = () => {
           <input
             ref={fileInputRef}
             className={s.input}
+            id="file"
             name="file"
             type="file"
             accept="image/jpeg"
