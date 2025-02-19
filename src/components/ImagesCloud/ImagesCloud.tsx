@@ -43,7 +43,7 @@ export const ImagesCloud = ({
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const imagesData = useContext(imagesContext);
   const { width } = useViewport();
-  const farAway = width < 768 ? 20 : 15;
+  const farAway = width < 768 ? 21 : 17;
 
   const dragStartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

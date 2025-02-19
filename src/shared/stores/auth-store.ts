@@ -3,13 +3,13 @@ import { AuthService } from "../services/AuthService";
 import axios from "axios";
 import { AuthResponse } from "../models/response/AuthResponse";
 import { BASE_API_URL } from "../constants";
-import { Status } from "../constants/auth-store";
+import { AuthStatus } from "../constants/auth-store";
 import { IUser } from "../models/IUser";
 
 class Store {
   user: IUser | null = null;
   isAuth = false;
-  status: Status = Status.Idle;
+  status: AuthStatus = AuthStatus.Idle;
   isAuthChecking: boolean = true;
   message: string | null = null;
   private errorTimeout: NodeJS.Timeout | null = null;
@@ -22,7 +22,7 @@ class Store {
     this.isAuth = bool;
   }
 
-  setStatus(status: Status) {
+  setStatus(status: AuthStatus) {
     this.status = status;
   }
 
@@ -42,7 +42,7 @@ class Store {
   clearError() {
     if (this.errorTimeout) clearTimeout(this.errorTimeout);
     this.message = null;
-    this.status = Status.Idle;
+    this.status = AuthStatus.Idle;
     this.errorTimeout = null;
   }
 
@@ -52,14 +52,14 @@ class Store {
 
   async login(email, password) {
     try {
-      this.setStatus(Status.Loading);
+      this.setStatus(AuthStatus.Loading);
       const res = await AuthService.login(email, password);
       localStorage.setItem("token", res.data.accessToken);
       this.setAuth(true);
       this.setUser(res.data.user);
-      this.setStatus(Status.Ok);
+      this.setStatus(AuthStatus.Ok);
     } catch (err) {
-      this.setStatus(Status.Error);
+      this.setStatus(AuthStatus.Error);
       if (axios.isAxiosError(err)) {
         if (err.response.status === 400) {
           this.setMessage("Incorrect login or password.");
@@ -77,25 +77,25 @@ class Store {
       this.setAuth(false);
       this.setUser({});
     } catch (err) {
-      this.setStatus(Status.Error);
+      this.setStatus(AuthStatus.Error);
       this.setMessage(err);
     }
   }
 
   async checkAuth() {
     try {
-      this.setStatus(Status.Loading);
+      this.setStatus(AuthStatus.Loading);
       const res = await axios.get<AuthResponse>(`${BASE_API_URL}/refresh`, {
         withCredentials: true,
       });
       localStorage.setItem("token", res.data.accessToken);
       this.setAuth(true);
       this.setUser(res.data.user);
-      this.setStatus(Status.Ok);
+      this.setStatus(AuthStatus.Ok);
     } catch (err) {
       console.log(err);
     }
   }
 }
 
-export const store = new Store();
+export const authStore = new Store();

@@ -1,4 +1,4 @@
-export enum Status {
+export enum AuthStatus {
   Idle,
   Ok,
   Loading,

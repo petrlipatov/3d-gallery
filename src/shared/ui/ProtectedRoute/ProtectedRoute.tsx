@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedRoute = observer(() => {
+export const ProtectedRoute = observer(() => {
   const store = useContext(authContext);
 
   if (!store.isAuth) {
@@ -11,5 +11,3 @@ const ProtectedRoute = observer(() => {
   }
   return <Outlet />;
 });
-
-export default ProtectedRoute;

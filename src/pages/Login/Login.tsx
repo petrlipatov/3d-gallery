@@ -5,7 +5,7 @@ import { Navigate } from "react-router";
 import { Loader } from "@/shared/ui/Loader";
 import s from "./Login.module.css";
 import { Button } from "@/shared/ui/Button";
-import { Status } from "@/shared/constants/auth-store";
+import { AuthStatus } from "@/shared/constants/auth-store";
 
 const LoginComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -72,7 +72,7 @@ const LoginComponent = () => {
             Login
           </Button>
 
-          {store.status === Status.Error && (
+          {store.status === AuthStatus.Error && (
             <p className={s.statusError}>{store.message}</p>
           )}
         </form>

@@ -4,7 +4,7 @@ import { AuthProvider } from "./providers/auth-provider";
 import { Home } from "@/pages/Home";
 import { Admin } from "@/pages/Admin";
 import { Login } from "@/pages/Login";
-import ProtectedRoute from "@components/ProtectedRoute/ProtectedRoute";
+import { ProtectedRoute } from "@/shared/ui/ProtectedRoute";
 
 export function App() {
   return (
