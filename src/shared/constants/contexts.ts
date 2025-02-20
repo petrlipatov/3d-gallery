@@ -1,6 +1,7 @@
 import { createContext } from "react";
-import { ImageData } from "../types";
+
 import { authStore } from "../stores";
+import { ImageData } from "../models/ImageData";
 
 export const viewportContext = createContext<{ width: number; height: number }>(
   {

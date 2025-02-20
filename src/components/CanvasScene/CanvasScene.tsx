@@ -15,7 +15,7 @@ import { Popup } from "../Popup";
 import { About } from "../About";
 import { TextsCloud } from "../TextCloud";
 import { ImagesCloud } from "../ImagesCloud/";
-import { Button } from "../../shared/ui/Button";
+import { Button } from "../../shared/ui/button";
 
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateRandomPositions } from "@/shared/helpers";

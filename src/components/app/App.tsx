@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router";
 import { ViewportProvider } from "./providers/viewport-provider";
 import { AuthProvider } from "./providers/auth-provider";
-import { Home } from "@/pages/Home";
-import { Admin } from "@/pages/Admin";
-import { Login } from "@/pages/Login";
-import { ProtectedRoute } from "@/shared/ui/ProtectedRoute";
+import { Home } from "@/pages/home";
+import { Admin } from "@/pages/admin";
+import { Login } from "@/pages/login";
+import { ProtectedRoute } from "@/shared/ui/protected-route";
 
 export function App() {
   return (

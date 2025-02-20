@@ -1,5 +1,5 @@
 import { CanvasScene } from "@/components/CanvasScene";
-import { ImagesProvider } from "./ImagesProvider/ImagesProvider";
+import { ImagesProvider } from "./images-provider";
 
 export const Home = () => {
   return (

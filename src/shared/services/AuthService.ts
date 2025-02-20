@@ -1,6 +1,6 @@
 import { api } from "@/shared/http";
 import { AxiosResponse } from "axios";
-import { AuthResponse } from "../models/response/AuthResponse";
+import { AuthResponse } from "../models/AuthResponse";
 
 export class AuthService {
   static async login(

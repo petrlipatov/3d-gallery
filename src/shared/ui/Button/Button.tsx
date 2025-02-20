@@ -1,17 +1,9 @@
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 import classNames from "classnames";
+import { Props } from "./types";
 import s from "./Button.module.css";
 
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "ghost";
-  size?: "sm" | "md" | "lg";
-  isLoading?: boolean;
-  loadingText?: string;
-  spinner?: React.ReactElement;
-  spinnerPlacement?: "start" | "end";
-};
-
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, Props>(
   (
     {
       children,
@@ -21,9 +13,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "primary",
       size = "md",
       type = "button",
-
       spinner,
-
       ...rest
     },
     ref

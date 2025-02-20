@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_API_URL } from "@/shared/constants";
-import { AuthResponse } from "../models/response/AuthResponse";
+import { AuthResponse } from "../models/AuthResponse";
 
 export const api = axios.create({
   withCredentials: true,
