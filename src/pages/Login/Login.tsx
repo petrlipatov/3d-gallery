@@ -1,4 +1,4 @@
-import { authContext } from "@/shared/constants/contexts";
+import { storeContext } from "@/shared/constants/contexts";
 import { observer } from "mobx-react-lite"; // Правильный импорт
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router";
@@ -12,30 +12,30 @@ const LoginComponent = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const store = useContext(authContext);
+  const { authStore } = useContext(storeContext);
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      store.checkAuth();
+      authStore.checkAuth();
     } else {
-      store.setIsAuthChecking(false);
+      authStore.setIsAuthChecking(false);
     }
-  }, [store]);
+  }, [authStore]);
 
-  if (store.isAuth) {
+  if (authStore.isAuth) {
     return <Navigate to="/admin" replace />;
   }
 
   return (
     <div className={s.page}>
-      {store.isAuthChecking ? (
+      {authStore.isAuthChecking ? (
         <Loader />
       ) : (
         <Form
           name="login"
           onSubmit={(e: FormEvent<HTMLFormElement>): void => {
             e.preventDefault();
-            store.login(email, password);
+            authStore.login(email, password);
           }}
         >
           <div className={s.inputContainer}>
@@ -72,8 +72,8 @@ const LoginComponent = () => {
             Login
           </Button>
 
-          {store.status === FetchStatus.Error && (
-            <p className={s.statusError}>{store.message}</p>
+          {authStore.status === FetchStatus.Error && (
+            <p className={s.statusError}>{authStore.message}</p>
           )}
         </Form>
       )}

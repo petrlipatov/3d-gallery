@@ -3,7 +3,7 @@ import { useContext, useRef, useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
 import { api } from "@/shared/http";
-import { authContext } from "@/shared/constants/contexts";
+import { storeContext } from "@/shared/constants/contexts";
 import { IMAGES_PATH } from "@/shared/constants";
 
 import s from "./Admin.module.css";
@@ -16,7 +16,7 @@ export const Admin = () => {
   const [message, setMessage] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const store = useContext(authContext);
+  const { authStore } = useContext(storeContext);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = e.target.files ? e.target.files[0] : null;
@@ -58,7 +58,7 @@ export const Admin = () => {
   }
 
   function handleLogout() {
-    store.logout();
+    authStore.logout();
   }
 
   return (

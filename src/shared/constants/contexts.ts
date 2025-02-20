@@ -1,6 +1,5 @@
 import { createContext } from "react";
-
-import { authStore } from "../stores";
+import { rootStore } from "../stores";
 import { ImageData } from "../models/ImageData";
 
 export const viewportContext = createContext<{ width: number; height: number }>(
@@ -12,4 +11,4 @@ export const viewportContext = createContext<{ width: number; height: number }>(
 
 export const imagesContext = createContext<ImageData[] | null>(null);
 
-export const authContext = createContext<typeof authStore>(null);
+export const storeContext = createContext<typeof rootStore>(null);

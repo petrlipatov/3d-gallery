@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router";
 import { ViewportProvider } from "./providers/viewport-provider";
-import { AuthProvider } from "./providers/auth-provider";
+import { StoreProvider } from "./providers/store-provider";
 import { Home } from "@/pages/home";
 import { Admin } from "@/pages/admin";
 import { Login } from "@/pages/login";
@@ -9,7 +9,7 @@ import { ProtectedRoute } from "@/shared/ui/protected-route";
 export function App() {
   return (
     <ViewportProvider>
-      <AuthProvider>
+      <StoreProvider>
         <Routes>
           <Route index element={<Home />} />
           <Route element={<ProtectedRoute />}>
@@ -17,7 +17,7 @@ export function App() {
           </Route>
           <Route path="login" element={<Login />} />
         </Routes>
-      </AuthProvider>
+      </StoreProvider>
     </ViewportProvider>
   );
 }
