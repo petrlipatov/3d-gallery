@@ -2,10 +2,11 @@ import { authContext } from "@/shared/constants/contexts";
 import { observer } from "mobx-react-lite"; // Правильный импорт
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router";
-import { Loader } from "@/shared/ui/Loader";
+import { Loader } from "@/shared/ui/loader";
 import s from "./Login.module.css";
-import { Button } from "@/shared/ui/Button";
-import { AuthStatus } from "@/shared/constants/auth-store";
+import { Button } from "@/shared/ui/button";
+import { FetchStatus } from "@/shared/constants/api";
+import { Form } from "@/shared/ui/form/Form";
 
 const LoginComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -30,13 +31,12 @@ const LoginComponent = () => {
       {store.isAuthChecking ? (
         <Loader />
       ) : (
-        <form
+        <Form
           name="login"
           onSubmit={(e: FormEvent<HTMLFormElement>): void => {
             e.preventDefault();
             store.login(email, password);
           }}
-          className={s.form}
         >
           <div className={s.inputContainer}>
             <label htmlFor="email" className={s.label}>
@@ -72,10 +72,10 @@ const LoginComponent = () => {
             Login
           </Button>
 
-          {store.status === AuthStatus.Error && (
+          {store.status === FetchStatus.Error && (
             <p className={s.statusError}>{store.message}</p>
           )}
-        </form>
+        </Form>
       )}
     </div>
   );

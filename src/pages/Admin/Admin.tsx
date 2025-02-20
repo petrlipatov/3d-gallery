@@ -1,8 +1,11 @@
 import { useContext, useRef, useState } from "react";
-import { IMAGES_PATH } from "@/shared/constants";
+
+import { Button } from "@/shared/ui/button";
+import { Form } from "@/shared/ui/form";
 import { api } from "@/shared/http";
-import { Button } from "@/shared/ui/Button";
 import { authContext } from "@/shared/constants/contexts";
+import { IMAGES_PATH } from "@/shared/constants";
+
 import s from "./Admin.module.css";
 
 export const Admin = () => {
@@ -63,12 +66,7 @@ export const Admin = () => {
       <Button className={s.logoutButton} onClick={handleLogout}>
         Logout
       </Button>
-      <form
-        method="post"
-        encType="multipart/form-data"
-        onSubmit={handleSubmit}
-        className={s.form}
-      >
+      <Form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
         <div className={s.inputContainer}>
           <label className={s.label} htmlFor="file">
             Choose file to upload:
@@ -95,7 +93,7 @@ export const Admin = () => {
         </Button>
         {status === "success" && <p className={s.statusSuccess}>{message}</p>}
         {status === "error" && <p className={s.statusError}>{message}</p>}
-      </form>
+      </Form>
     </div>
   );
 };
