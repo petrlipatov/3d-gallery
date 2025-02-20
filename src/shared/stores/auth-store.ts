@@ -1,28 +1,30 @@
 import { makeAutoObservable } from "mobx";
 import { AuthService } from "../services/AuthService";
 import axios from "axios";
-import { AuthResponse } from "../models/response/AuthResponse";
+import { AuthResponse, User } from "../models";
 import { BASE_API_URL } from "../constants";
-import { AuthStatus } from "../constants/auth-store";
-import { IUser } from "../models/IUser";
+import { FetchStatus } from "../constants/api";
+import { RootStore } from "./root-store";
 
-class Store {
-  user: IUser | null = null;
+export class AuthStore {
+  rootStore: RootStore;
+  user: User | null = null;
   isAuth = false;
-  status: AuthStatus = AuthStatus.Idle;
+  status: FetchStatus = FetchStatus.Idle;
   isAuthChecking: boolean = true;
   message: string | null = null;
   private errorTimeout: NodeJS.Timeout | null = null;
 
-  constructor() {
+  constructor(rootStore) {
     makeAutoObservable(this);
+    this.rootStore = rootStore;
   }
 
   setAuth(bool: boolean) {
     this.isAuth = bool;
   }
 
-  setStatus(status: AuthStatus) {
+  setStatus(status: FetchStatus) {
     this.status = status;
   }
 
@@ -42,7 +44,7 @@ class Store {
   clearError() {
     if (this.errorTimeout) clearTimeout(this.errorTimeout);
     this.message = null;
-    this.status = AuthStatus.Idle;
+    this.status = FetchStatus.Idle;
     this.errorTimeout = null;
   }
 
@@ -52,14 +54,14 @@ class Store {
 
   async login(email, password) {
     try {
-      this.setStatus(AuthStatus.Loading);
+      this.setStatus(FetchStatus.Loading);
       const res = await AuthService.login(email, password);
       localStorage.setItem("token", res.data.accessToken);
       this.setAuth(true);
       this.setUser(res.data.user);
-      this.setStatus(AuthStatus.Ok);
+      this.setStatus(FetchStatus.Ok);
     } catch (err) {
-      this.setStatus(AuthStatus.Error);
+      this.setStatus(FetchStatus.Error);
       if (axios.isAxiosError(err)) {
         if (err.response.status === 400) {
           this.setMessage("Incorrect login or password.");
@@ -77,25 +79,23 @@ class Store {
       this.setAuth(false);
       this.setUser({});
     } catch (err) {
-      this.setStatus(AuthStatus.Error);
+      this.setStatus(FetchStatus.Error);
       this.setMessage(err);
     }
   }
 
   async checkAuth() {
     try {
-      this.setStatus(AuthStatus.Loading);
+      this.setStatus(FetchStatus.Loading);
       const res = await axios.get<AuthResponse>(`${BASE_API_URL}/refresh`, {
         withCredentials: true,
       });
       localStorage.setItem("token", res.data.accessToken);
       this.setAuth(true);
       this.setUser(res.data.user);
-      this.setStatus(AuthStatus.Ok);
+      this.setStatus(FetchStatus.Ok);
     } catch (err) {
       console.log(err);
     }
   }
 }
-
-export const authStore = new Store();
