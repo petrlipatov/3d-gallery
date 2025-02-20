@@ -17,5 +17,5 @@ export type { RootStore };
 export const rootStore = new RootStore();
 
 autorun(() => {
-  console.log(rootStore.imagesStore.status);
+  console.log(rootStore.authStore.isAuth);
 });

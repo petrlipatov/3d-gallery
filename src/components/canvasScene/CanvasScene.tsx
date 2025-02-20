@@ -40,7 +40,7 @@ export const CanvasScene = observer(() => {
   const { width } = useViewport();
   const { loaded, total } = useProgress();
   const animationTimerRef = useRef<ReturnType<typeof setTimeout>>();
-  const { imagesStore } = useContext(storeContext);
+  const { imagesStore, authStore } = useContext(storeContext);
 
   const selectedImage = searchParams.get("image");
   const isMobile = width < 768;
@@ -187,6 +187,11 @@ export const CanvasScene = observer(() => {
           </Button>
         </div>
 
+        {authStore.isAuth && (
+          <Button className={s.logout} onClick={() => authStore.logout()}>
+            Logout
+          </Button>
+        )}
         {selectedImage && <Popup image={selectedImage} onClose={closePopup} />}
       </div>
     )

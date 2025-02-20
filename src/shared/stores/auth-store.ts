@@ -18,6 +18,7 @@ export class AuthStore {
   constructor(rootStore) {
     makeAutoObservable(this);
     this.rootStore = rootStore;
+    this.initAuth();
   }
 
   setAuth(bool: boolean) {
@@ -52,6 +53,16 @@ export class AuthStore {
     this.isAuthChecking = status;
   }
 
+  initAuth() {
+    if (localStorage.getItem("token")) {
+      this.checkAuth().catch(() => {
+        this.setIsAuthChecking(false);
+      });
+    } else {
+      this.setIsAuthChecking(false);
+    }
+  }
+
   async login(email, password) {
     try {
       this.setStatus(FetchStatus.Loading);
@@ -77,7 +88,7 @@ export class AuthStore {
       await AuthService.logout();
       localStorage.removeItem("token");
       this.setAuth(false);
-      this.setUser({});
+      this.setUser(null);
     } catch (err) {
       this.setStatus(FetchStatus.Error);
       this.setMessage(err);

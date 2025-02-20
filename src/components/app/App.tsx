@@ -6,7 +6,7 @@ import { Admin } from "@/pages/admin";
 import { Login } from "@/pages/login";
 import { ProtectedRoute } from "@/shared/ui/protected-route";
 
-export function App() {
+export const App = () => {
   return (
     <ViewportProvider>
       <StoreProvider>
@@ -20,4 +20,4 @@ export function App() {
       </StoreProvider>
     </ViewportProvider>
   );
-}
+};

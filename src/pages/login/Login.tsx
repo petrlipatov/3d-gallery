@@ -1,6 +1,6 @@
 import { storeContext } from "@/shared/constants/contexts";
 import { observer } from "mobx-react-lite"; // Правильный импорт
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Navigate } from "react-router";
 import { Loader } from "@/shared/ui/loader";
 import s from "./Login.module.css";
@@ -13,14 +13,6 @@ const LoginComponent = () => {
   const [password, setPassword] = useState<string>("");
 
   const { authStore } = useContext(storeContext);
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      authStore.checkAuth();
-    } else {
-      authStore.setIsAuthChecking(false);
-    }
-  }, [authStore]);
 
   if (authStore.isAuth) {
     return <Navigate to="/admin" replace />;
