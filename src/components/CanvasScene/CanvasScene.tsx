@@ -11,12 +11,12 @@ import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Loader, useProgress } from "@react-three/drei";
 
-import { Popup } from "../Popup";
-import { About } from "../About";
-import { TextsCloud } from "../TextCloud";
-import { ImagesCloud } from "../ImagesCloud/";
-import { Button } from "../../shared/ui/button";
+import { Popup } from "../popup";
+import { About } from "../about";
+import { TextsCloud } from "../textCloud";
+import { ImagesCloud } from "../imagesCloud";
 
+import { Button } from "../../shared/ui/button";
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateRandomPositions } from "@/shared/helpers";
 import { imagesContext } from "@/shared/constants/contexts";
