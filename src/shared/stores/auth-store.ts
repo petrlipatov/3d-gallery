@@ -55,7 +55,7 @@ export class AuthStore {
 
   initAuth() {
     if (localStorage.getItem("token")) {
-      this.checkAuth().catch(() => {
+      this.checkAuth().finally(() => {
         this.setIsAuthChecking(false);
       });
     } else {
