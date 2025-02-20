@@ -10,21 +10,22 @@ import { useSearchParams } from "react-router";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Loader, useProgress } from "@react-three/drei";
+import { observer } from "mobx-react-lite";
 
 import { Popup } from "../popup";
 import { About } from "../about";
 import { TextsCloud } from "../textCloud";
 import { ImagesCloud } from "../imagesCloud";
-
 import { Button } from "../../shared/ui/button";
+
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateRandomPositions } from "@/shared/helpers";
-import { imagesContext } from "@/shared/constants/contexts";
+import { storeContext } from "@/shared/constants/contexts";
 import { Animations } from "@/shared/constants";
 import { Coordinates } from "@/shared/types";
 import s from "./CanvasScene.module.css";
 
-export function CanvasScene() {
+export const CanvasScene = observer(() => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isControlsEnabled, setIsControlsEnabled] = useState<boolean>(true);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
@@ -39,7 +40,7 @@ export function CanvasScene() {
   const { width } = useViewport();
   const { loaded, total } = useProgress();
   const animationTimerRef = useRef<ReturnType<typeof setTimeout>>();
-  const imagesData = useContext(imagesContext);
+  const { imagesStore } = useContext(storeContext);
 
   const selectedImage = searchParams.get("image");
   const isMobile = width < 768;
@@ -52,10 +53,12 @@ export function CanvasScene() {
         animationTimerRef.current = setInterval(() => {
           setIsAnimating(false);
         }, 4000);
-        setRandomCoordinate(generateRandomPositions(imagesData?.length));
+        setRandomCoordinate(
+          generateRandomPositions(imagesStore.images?.length)
+        );
       }
     },
-    [loaded, total, imagesData]
+    [loaded, total, imagesStore.images]
   );
 
   const clearAnimationTimer = () => {
@@ -99,7 +102,7 @@ export function CanvasScene() {
     clearAnimationTimer();
     animationTimerRef.current = setInterval(() => setIsAnimating(false), 4000);
     if (activeAnimation === Animations.Shuffle) {
-      setRandomCoordinate(generateRandomPositions(imagesData.length));
+      setRandomCoordinate(generateRandomPositions(imagesStore.images.length));
     }
     setActiveAnimation(Animations.Shuffle);
   };
@@ -112,7 +115,7 @@ export function CanvasScene() {
   };
 
   return (
-    imagesData && (
+    imagesStore.images && (
       <div className={s.canvasContainer}>
         <Canvas
           camera={{ fov: 75, position: [0, 0, isMobile ? 20 : 15], near: 1 }}
@@ -188,4 +191,4 @@ export function CanvasScene() {
       </div>
     )
   );
-}
+});

@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { rootStore } from "../stores";
-import { ImageData } from "../models/ImageData";
+import { ImagesStore } from "../stores/images-store";
 
 export const viewportContext = createContext<{ width: number; height: number }>(
   {
@@ -9,6 +9,6 @@ export const viewportContext = createContext<{ width: number; height: number }>(
   }
 );
 
-export const imagesContext = createContext<ImageData[] | null>(null);
+export const imagesContext = createContext<ImagesStore>(null);
 
 export const storeContext = createContext<typeof rootStore>(null);

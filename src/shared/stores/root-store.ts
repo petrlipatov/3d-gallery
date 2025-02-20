@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { autorun, makeAutoObservable } from "mobx";
 import { AuthStore } from "./auth-store";
 import { ImagesStore } from "./images-store";
 
@@ -15,3 +15,7 @@ class RootStore {
 
 export type { RootStore };
 export const rootStore = new RootStore();
+
+autorun(() => {
+  console.log(rootStore.imagesStore.status);
+});

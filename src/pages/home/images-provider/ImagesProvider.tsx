@@ -1,12 +1,19 @@
-import { imagesContext } from "@shared/constants/contexts";
-import { ImageData } from "@shared/models";
-import { BASE_API_URL, IMAGES_PATH } from "@/shared/constants";
-import { useFetch } from "@/shared/hooks";
+import { imagesContext, storeContext } from "@shared/constants/contexts";
+import { useContext, useEffect, useRef } from "react";
 
 export function ImagesProvider({ children }) {
-  const { data } = useFetch<ImageData[]>(`${BASE_API_URL}${IMAGES_PATH}`);
+  const { imagesStore } = useContext(storeContext);
+  const storeRef = useRef(imagesStore);
+
+  useEffect(() => {
+    if (!storeRef.current.images) {
+      storeRef.current.fetchImages();
+    }
+  }, []);
 
   return (
-    <imagesContext.Provider value={data}>{children}</imagesContext.Provider>
+    <imagesContext.Provider value={imagesStore}>
+      {children}
+    </imagesContext.Provider>
   );
 }

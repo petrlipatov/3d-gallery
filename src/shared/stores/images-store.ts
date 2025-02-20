@@ -19,11 +19,19 @@ export class ImagesStore {
     this.images = images;
   }
 
+  setStatus(status: FetchStatus) {
+    this.status = status;
+  }
+
   async fetchImages() {
     try {
+      console.log("fetch images");
+      this.setStatus(FetchStatus.Loading);
       const res = await ImagesService.fetchImages();
       this.setImages(res.data);
+      this.setStatus(FetchStatus.Ok);
     } catch (err) {
+      this.setStatus(FetchStatus.Error);
       console.log(err);
     }
   }
