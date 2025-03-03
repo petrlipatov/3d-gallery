@@ -1,10 +1,11 @@
-import { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { Navigation } from "@/components/navigation/navigation";
 import { Button } from "@/ui/button";
 import { Form } from "@/ui/form";
 import { Input } from "@/ui/input";
 import { api } from "@/shared/http";
-import { storeContext } from "@/shared/constants/contexts";
 import { IMAGES_PATH } from "@/shared/constants";
+
 import s from "./Admin.module.css";
 
 export const Admin = () => {
@@ -17,8 +18,6 @@ export const Admin = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   const timerRef = useRef<number | null>(null);
-
-  const { authStore } = useContext(storeContext);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = e.target.files ? e.target.files[0] : null;
@@ -70,15 +69,9 @@ export const Admin = () => {
     setMessage("");
   }
 
-  function handleLogout() {
-    authStore.logout();
-  }
-
   return (
     <div className={s.page}>
-      <Button className={s.logoutButton} onClick={handleLogout}>
-        Logout
-      </Button>
+      <Navigation location={"Admin"} />
       <Form
         ref={formRef}
         method="post"

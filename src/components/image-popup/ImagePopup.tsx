@@ -15,8 +15,8 @@ export const ImagePopup = ({ image, onClose }) => {
     e.stopPropagation();
     imagesStore.deleteImage(image);
     imagesStore.setImages(null);
-    navigate("/", { replace: true });
     imagesStore.fetchImages();
+    navigate("/", { replace: true });
   };
 
   const imageData = imagesStore.images[image];
@@ -24,7 +24,7 @@ export const ImagePopup = ({ image, onClose }) => {
   return (
     <Popup onClose={onClose}>
       {authStore.isAuth && (
-        <Button className={s.removeButton} onClick={removeHandler}>
+        <Button className={s.removeButton} size={"lg"} onClick={removeHandler}>
           Remove
         </Button>
       )}

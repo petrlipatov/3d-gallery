@@ -63,3 +63,18 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
+.logoutButton2 {
+  position: absolute;
+  right: 120px;
+  top: 30px;
+  background-color: #9c9999;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
