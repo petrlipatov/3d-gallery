@@ -1,9 +1,9 @@
 import { createPortal } from "react-dom";
-import { useEscapeKey } from "@/shared/hooks/useEscKey";
+import { useKey } from "@/shared/hooks/useKey";
 import s from "./Popup.module.css";
 
 export function Popup({ children, onClose }) {
-  useEscapeKey(onClose);
+  useKey(onClose, ["Escape", "Space"]);
 
   return createPortal(
     <div className={s.popup} onClick={onClose}>
