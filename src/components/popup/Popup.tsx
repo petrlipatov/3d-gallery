@@ -4,9 +4,12 @@ import { LazyImage } from "@/shared/ui/lazy-image";
 import { storeContext } from "@/shared/constants/contexts";
 import { BASE_API_URL, IMAGES_PATH } from "@/shared/constants";
 import s from "./Popup.module.css";
+import { useEscapeKey } from "@/shared/hooks/useEscKey";
 
 export function Popup({ image, onClose }) {
   const { imagesStore } = useContext(storeContext);
+  useEscapeKey(onClose);
+
   const imageData = imagesStore.images[image];
 
   return createPortal(
