@@ -16,7 +16,7 @@ import { About } from "../about";
 import { TextsCloud } from "../text-cloud";
 import { ImagesCloud } from "../images-cloud";
 import { ImagePopup } from "../image-popup/ImagePopup";
-import { Button } from "../../ui/button";
+import { Button } from "@/ui/button";
 
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateRandomPositions } from "@/shared/helpers";
@@ -25,7 +25,7 @@ import { Animations } from "@/shared/constants";
 import { Coordinates } from "@/shared/types";
 
 import s from "./CanvasScene.module.css";
-import { Navigation } from "../navigation/navigation";
+import { Navigation } from "../navigation";
 
 export const CanvasScene = observer(() => {
   const [searchParams, setSearchParams] = useSearchParams();

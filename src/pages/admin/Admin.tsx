@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Navigation } from "@/components/navigation/navigation";
+import { Navigation } from "@/components/navigation";
 import { Button } from "@/ui/button";
 import { Form } from "@/ui/form";
 import { Input } from "@/ui/input";
