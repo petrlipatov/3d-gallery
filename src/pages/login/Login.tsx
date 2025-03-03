@@ -2,11 +2,13 @@ import { storeContext } from "@/shared/constants/contexts";
 import { observer } from "mobx-react-lite"; // Правильный импорт
 import { FormEvent, useContext, useState } from "react";
 import { Navigate } from "react-router";
-import { Loader } from "@/shared/ui/loader";
-import s from "./Login.module.css";
-import { Button } from "@/shared/ui/button";
+import { Form } from "@/ui/form/Form";
+import { Loader } from "@/ui/loader";
+import { Button } from "@/ui/button";
+import { Input } from "@/ui/input";
 import { FetchStatus } from "@/shared/constants/api";
-import { Form } from "@/shared/ui/form/Form";
+
+import s from "./Login.module.css";
 
 const LoginComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -30,36 +32,28 @@ const LoginComponent = () => {
             authStore.login(email, password);
           }}
         >
-          <div className={s.inputContainer}>
-            <label htmlFor="email" className={s.label}>
-              Email:
-            </label>
-            <input
-              placeholder="Email"
-              type="email"
-              id="email"
-              className={s.input}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              required
-            />
-          </div>
-          <div className={s.inputContainer}>
-            <label htmlFor="password" className={s.label}>
-              Password:
-            </label>
-            <input
-              placeholder="Password"
-              type="password"
-              id="password"
-              className={s.input}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="on"
-              required
-            />
-          </div>
+          <Input
+            type="email"
+            id="email"
+            label="Email:"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+            required
+          />
+
+          <Input
+            type="password"
+            id="password"
+            label="Password:"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="on"
+            required
+          />
+
           <Button variant={"secondary"} className={s.button} type="submit">
             Login
           </Button>

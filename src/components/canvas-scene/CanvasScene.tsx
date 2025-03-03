@@ -15,7 +15,7 @@ import { observer } from "mobx-react-lite";
 import { About } from "../about";
 import { TextsCloud } from "../text-cloud";
 import { ImagesCloud } from "../images-cloud";
-import { Button } from "../../shared/ui/button";
+import { Button } from "../../ui/button";
 
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateRandomPositions } from "@/shared/helpers";

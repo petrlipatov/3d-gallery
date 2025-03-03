@@ -9,27 +9,6 @@
 }
 
 /* Стили для контейнера ввода */
-.inputContainer {
-  margin-bottom: 20px;
-}
-
-.label {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.input {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fafafa;
-  cursor: pointer;
-}
 
 .input:focus {
   border-color: #66afe9;

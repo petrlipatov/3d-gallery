@@ -7,28 +7,6 @@
   font-family: "Arial", sans-serif;
 }
 
-.inputContainer {
-  margin-bottom: 20px;
-}
-
-.input {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fafafa;
-  cursor: pointer;
-}
-
-.label {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  display: block;
-  margin-bottom: 8px;
-}
-
 .statusError {
   font-size: 16px;
   color: #f44336;

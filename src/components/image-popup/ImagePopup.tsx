@@ -1,7 +1,7 @@
 import { BASE_API_URL, IMAGES_PATH } from "@/shared/constants";
 import { storeContext } from "@/shared/constants/contexts";
-import { LazyImage } from "@/shared/ui/lazy-image";
-import { Popup } from "@/shared/ui/popup";
+import { LazyImage } from "@/ui/lazy-image";
+import { Popup } from "@/ui/popup";
 import { useContext } from "react";
 
 export const ImagePopup = ({ image, onClose }) => {

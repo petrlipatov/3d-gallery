@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Loader } from "@/shared/ui/loader";
+import { Loader } from "@/ui/loader";
 import s from "./LazyImage.module.css";
 
 export function LazyImage({ src, alt }) {

@@ -1,11 +1,11 @@
 import { useContext, useRef, useState } from "react";
 
-import { Button } from "@/shared/ui/button";
-import { Form } from "@/shared/ui/form";
+import { Button } from "@/ui/button";
+import { Form } from "@/ui/form";
+import { Input } from "@/ui/input";
 import { api } from "@/shared/http";
 import { storeContext } from "@/shared/constants/contexts";
 import { IMAGES_PATH } from "@/shared/constants";
-
 import s from "./Admin.module.css";
 
 export const Admin = () => {
@@ -67,23 +67,17 @@ export const Admin = () => {
         Logout
       </Button>
       <Form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
-        <div className={s.inputContainer}>
-          <label className={s.label} htmlFor="file">
-            Choose file to upload:
-          </label>
-          <input
-            ref={fileInputRef}
-            className={s.input}
-            id="file"
-            name="file"
-            type="file"
-            accept="image/jpeg"
-            multiple
-            onChange={handleFileChange}
-            disabled={status === "loading"}
-            required
-          />
-        </div>
+        <Input
+          ref={fileInputRef}
+          id="file"
+          name="file"
+          type="file"
+          accept="image/jpeg"
+          onChange={handleFileChange}
+          disabled={status === "loading"}
+          required
+        />
+
         <Button
           variant="secondary"
           type="submit"
