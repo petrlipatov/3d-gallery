@@ -4,7 +4,7 @@ import { StoreProvider } from "./providers/store-provider";
 import { Home } from "@/pages/home";
 import { Admin } from "@/pages/admin";
 import { Login } from "@/pages/login";
-import { ProtectedRoute } from "@/shared/ui/protected-route";
+import { ProtectedRoute } from "@/components/protected-route";
 
 export const App = () => {
   return (
