@@ -15,7 +15,7 @@ export class ImagesStore {
     this.rootStore = rootStore;
   }
 
-  setImages(images: ImageData[]) {
+  setImages(images: ImageData[] | null) {
     this.images = images;
   }
 
@@ -28,6 +28,18 @@ export class ImagesStore {
       this.setStatus(FetchStatus.Loading);
       const res = await ImagesService.fetchImages();
       this.setImages(res.data);
+      this.setStatus(FetchStatus.Ok);
+    } catch (err) {
+      this.setStatus(FetchStatus.Error);
+      console.log(err);
+    }
+  }
+
+  async deleteImage(image: string) {
+    try {
+      this.setStatus(FetchStatus.Loading);
+      const res = await ImagesService.deleteImage(image);
+      console.log(res);
       this.setStatus(FetchStatus.Ok);
     } catch (err) {
       this.setStatus(FetchStatus.Error);
