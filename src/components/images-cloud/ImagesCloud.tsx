@@ -12,7 +12,7 @@ import { observer } from "mobx-react-lite";
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { DragControls } from "three/addons/controls/DragControls.js";
-import { ImagePlane } from "../imagePlane";
+import { ImagePlane } from "../image-plane";
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateGridPositions } from "@/shared/helpers";
 import { storeContext } from "@/shared/constants/contexts";

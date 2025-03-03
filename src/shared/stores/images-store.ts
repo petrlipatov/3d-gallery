@@ -25,7 +25,6 @@ export class ImagesStore {
 
   async fetchImages() {
     try {
-      console.log("fetch images");
       this.setStatus(FetchStatus.Loading);
       const res = await ImagesService.fetchImages();
       this.setImages(res.data);

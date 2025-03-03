@@ -14,8 +14,8 @@ import { observer } from "mobx-react-lite";
 
 import { Popup } from "../popup";
 import { About } from "../about";
-import { TextsCloud } from "../textCloud";
-import { ImagesCloud } from "../imagesCloud";
+import { TextsCloud } from "../text-cloud";
+import { ImagesCloud } from "../images-cloud";
 import { Button } from "../../shared/ui/button";
 
 import { useViewport } from "@/shared/hooks/useViewport";

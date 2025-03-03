@@ -1,4 +1,4 @@
-import { CanvasScene } from "@/components/canvasScene";
+import { CanvasScene } from "@/components/canvas-scene";
 import { ImagesProvider } from "./images-provider";
 
 export const Home = () => {
