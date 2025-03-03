@@ -12,7 +12,6 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Loader, useProgress } from "@react-three/drei";
 import { observer } from "mobx-react-lite";
 
-import { Popup } from "../popup";
 import { About } from "../about";
 import { TextsCloud } from "../text-cloud";
 import { ImagesCloud } from "../images-cloud";
@@ -24,6 +23,7 @@ import { storeContext } from "@/shared/constants/contexts";
 import { Animations } from "@/shared/constants";
 import { Coordinates } from "@/shared/types";
 import s from "./CanvasScene.module.css";
+import { ImagePopup } from "../image-popup/ImagePopup";
 
 export const CanvasScene = observer(() => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -192,7 +192,9 @@ export const CanvasScene = observer(() => {
             Logout
           </Button>
         )}
-        {selectedImage && <Popup image={selectedImage} onClose={closePopup} />}
+        {selectedImage && (
+          <ImagePopup image={selectedImage} onClose={closePopup} />
+        )}
       </div>
     )
   );

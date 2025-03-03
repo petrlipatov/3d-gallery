@@ -10,12 +10,4 @@
 
 .popupContent {
   position: relative;
-  max-width: 90%;
-  max-height: 90%;
-}
-
-.popupContent img {
-  width: 100%;
-  height: auto;
-  display: block;
 }
