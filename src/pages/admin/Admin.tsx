@@ -1,5 +1,4 @@
 import { useContext, useRef, useState } from "react";
-
 import { Button } from "@/ui/button";
 import { Form } from "@/ui/form";
 import { Input } from "@/ui/input";
@@ -14,7 +13,10 @@ export const Admin = () => {
     "idle" | "loading" | "error" | "success"
   >("idle");
   const [message, setMessage] = useState<string>("");
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const timerRef = useRef<number | null>(null);
 
   const { authStore } = useContext(storeContext);
 
@@ -43,18 +45,29 @@ export const Admin = () => {
       const response = await api.post(IMAGES_PATH, formData);
 
       if (response.status === 200) {
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
-        setFile(null);
         setStatus("success");
         setMessage("File uploaded successfully!");
+        timerRef.current = window.setTimeout(() => {
+          resetForm();
+        }, 3000);
       }
     } catch (error) {
       console.error("Error during file upload:", error);
       setStatus("error");
       setMessage("An error occurred during the upload.");
+      timerRef.current = window.setTimeout(() => {
+        resetForm();
+      }, 3000);
     }
+  }
+
+  function resetForm() {
+    if (formRef.current) {
+      formRef.current.reset();
+    }
+    setFile(null);
+    setStatus("idle");
+    setMessage("");
   }
 
   function handleLogout() {
@@ -66,7 +79,12 @@ export const Admin = () => {
       <Button className={s.logoutButton} onClick={handleLogout}>
         Logout
       </Button>
-      <Form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
+      <Form
+        ref={formRef}
+        method="post"
+        encType="multipart/form-data"
+        onSubmit={handleSubmit}
+      >
         <Input
           ref={fileInputRef}
           id="file"

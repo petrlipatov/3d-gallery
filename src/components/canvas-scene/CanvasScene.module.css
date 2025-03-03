@@ -31,7 +31,6 @@
 }
 
 .button {
-  -webkit-appearance: none;
   white-space: nowrap;
   height: 24px;
   width: 70px;
