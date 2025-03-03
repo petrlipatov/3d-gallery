@@ -1,12 +1,5 @@
-import { InputHTMLAttributes, MutableRefObject, ReactNode } from "react";
+import { Props } from "./types";
 import s from "./Input.module.css";
-
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  labelRender?: (id?: string) => ReactNode;
-  className?: string;
-  ref?: MutableRefObject<HTMLInputElement>;
-}
 
 export function Input({
   label,
@@ -14,7 +7,7 @@ export function Input({
   className = "",
   id,
   ...props
-}: InputProps) {
+}: Props) {
   return (
     <div className={`${s.inputContainer} ${className}`}>
       {labelRender

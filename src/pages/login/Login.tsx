@@ -1,4 +1,3 @@
-import { storeContext } from "@/shared/constants/contexts";
 import { observer } from "mobx-react-lite"; // Правильный импорт
 import { FormEvent, useContext, useState } from "react";
 import { Navigate } from "react-router";
@@ -6,8 +5,8 @@ import { Form } from "@/ui/form/Form";
 import { Loader } from "@/ui/loader";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
+import { storeContext } from "@/shared/constants/contexts";
 import { FetchStatus } from "@/shared/constants/api";
-
 import s from "./Login.module.css";
 
 const LoginComponent = () => {

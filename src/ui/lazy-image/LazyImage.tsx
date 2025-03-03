@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Loader } from "@/ui/loader";
+import { Props } from "./types";
 import s from "./LazyImage.module.css";
 
-export function LazyImage({ src, alt }) {
+export function LazyImage({ src, alt }: Props) {
   const [loadedSrc, setLoadedSrc] = useState(null);
 
   useEffect(() => {
