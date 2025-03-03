@@ -4,7 +4,7 @@ export function useEscapeKey(callback) {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
-        callback();
+        callback(event);
       }
     };
 
