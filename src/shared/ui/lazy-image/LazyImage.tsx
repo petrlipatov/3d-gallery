@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Loader } from "@/shared/ui/loader";
+import s from "./LazyImage.module.css";
 
 export function LazyImage({ src, alt }) {
   const [loadedSrc, setLoadedSrc] = useState(null);
@@ -14,5 +15,5 @@ export function LazyImage({ src, alt }) {
     return <Loader />;
   }
 
-  return <img src={loadedSrc} alt={alt} />;
+  return <img className={s.image} src={loadedSrc} alt={alt} />;
 }
