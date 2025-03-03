@@ -32,5 +32,6 @@ When manipulating hundreds of objects in 3D space, libraries (eg GSAP, React-Spr
 - JWT
 - Multer
 - Sharp
+- Stored in separate repository: [link](https://github.com/petrlipatov/3d-gallery-server)
 
 [Link to the application](https://stepanplusdrawingultra.site/)
