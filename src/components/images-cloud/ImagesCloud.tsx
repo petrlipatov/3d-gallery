@@ -99,10 +99,8 @@ export const ImagesCloud = observer(
         }
         case Animations.Whomi: {
           refs.current.forEach((ref) => {
-            const targetPosition = ref.position.clone() as THREE.Vector3;
-            targetPosition.setZ(farAway);
-            targetPosition.add(offsetVector);
-            ref.position.lerp(targetPosition, 0.1);
+            targetVector.copy(ref.position).setZ(farAway).add(offsetVector);
+            ref.position.lerp(targetVector, 0.1);
           });
           break;
         }
