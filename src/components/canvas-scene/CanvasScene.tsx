@@ -16,16 +16,15 @@ import { About } from "../about";
 import { TextsCloud } from "../text-cloud";
 import { ImagesCloud } from "../images-cloud";
 import { ImagePopup } from "../image-popup/ImagePopup";
-import { Button } from "@/ui/button";
+import { Navigation } from "../navigation";
 
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateRandomPositions } from "@/shared/helpers";
 import { storeContext } from "@/shared/constants/contexts";
 import { Animations } from "@/shared/constants";
 import { Coordinates } from "@/shared/types";
-
+import { Button } from "@/ui/button";
 import s from "./CanvasScene.module.css";
-import { Navigation } from "../navigation";
 
 export const CanvasScene = observer(() => {
   const [searchParams, setSearchParams] = useSearchParams();

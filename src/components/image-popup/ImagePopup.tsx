@@ -39,6 +39,11 @@ export const ImagePopup = ({ imageId, onClose }) => {
     <Popup onClose={onClose}>
       {!isLoading ? (
         <>
+          <ImageComponent
+            className={s.popupImage}
+            src={loadedSrc}
+            alt={"image"}
+          />
           {authStore.isAuth && (
             <Button
               className={s.removeButton}
@@ -48,11 +53,6 @@ export const ImagePopup = ({ imageId, onClose }) => {
               Remove
             </Button>
           )}
-          <ImageComponent
-            className={s.popupImage}
-            src={loadedSrc}
-            alt={"image"}
-          />
         </>
       ) : (
         <Loader />
