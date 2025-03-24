@@ -4,18 +4,9 @@ import { forwardRef, useState } from "react";
 import { useViewport } from "@/shared/hooks/useViewport";
 import { useSpring, config, animated } from "@react-spring/three";
 import { BASE_API_URL, IMAGES_PATH } from "@/shared/constants";
-interface ImagePlaneProps {
-  index: number;
-  data: {
-    large: string;
-    medium: string;
-    small: string;
-  };
-  isDragged: boolean;
-  onClick: (index: number) => void;
-}
+import { Props } from "./types";
 
-export const ImagePlane = forwardRef<THREE.Mesh, ImagePlaneProps>(
+export const ImagePlane = forwardRef<THREE.Mesh, Props>(
   ({ data, onClick, isDragged, index }, ref) => {
     const [active, setActive] = useState(false);
 

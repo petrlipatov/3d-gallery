@@ -1,17 +1,21 @@
-export function generateRandomPositions(len): [number, number, number][] {
-  return Array.from({ length: len }, () => {
-    const spacing = 1.5;
+export function generateRandomPositions(
+  len: number
+): Map<number, [number, number, number]> {
+  const positions = new Map<number, [number, number, number]>();
+  const spacing = 1.5;
+  const radiusX = spacing * 20;
+  const radiusY = spacing * 20;
 
+  for (let i = 0; i < len; i++) {
     const angle = Math.random() * Math.PI * 2;
-    const radiusX = spacing * 20;
-    const radiusY = spacing * 20;
-
-    return [
+    positions.set(i, [
       Math.cos(angle) * radiusX * Math.random(),
       Math.sin(angle) * radiusY * Math.random(),
       Math.random() * 10,
-    ];
-  });
+    ]);
+  }
+
+  return positions;
 }
 
 export const generateGridPositions = (

@@ -49,9 +49,9 @@ export const ImagesCloud = observer(
     }, [imagesStore.images.length]);
 
     const handleRandomize = useCallback(() => {
-      const randomIndex = Math.floor(Math.random() * randomCoordinates.length);
+      const randomIndex = Math.floor(Math.random() * randomCoordinates.size);
       setSelectedIndex(randomIndex);
-    }, [randomCoordinates.length]);
+    }, [randomCoordinates.size]);
 
     useFrame(function animationControllers() {
       if (!isAnimating) return;
@@ -66,7 +66,7 @@ export const ImagesCloud = observer(
         }
         case Animations.Shuffle: {
           refs.current.forEach((ref, i) => {
-            targetVector.set(...randomCoordinates[i]);
+            targetVector.set(...randomCoordinates.get(i));
             ref.position.lerp(targetVector, 0.05);
           });
           break;
@@ -171,7 +171,7 @@ export const ImagesCloud = observer(
     return (
       imagesStore.images && (
         <>
-          {randomCoordinates.map((_, index) => {
+          {Array.from(randomCoordinates.entries()).map((_, index) => {
             return (
               <ImagePlane
                 index={index}

@@ -1,4 +1,4 @@
-export type Coordinates = [number, number, number][];
+export type Coordinates = Map<number, [number, number, number]>;
 
 export type ImageData = {
   small: string;
