@@ -191,7 +191,7 @@ export const CanvasScene = observer(() => {
 
         {authStore.isAuth && <Navigation location={"Home"} />}
         {selectedImage && (
-          <ImagePopup image={selectedImage} onClose={closePopup} />
+          <ImagePopup imageId={selectedImage} onClose={closePopup} />
         )}
       </div>
     )
