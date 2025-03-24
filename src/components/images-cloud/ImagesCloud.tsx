@@ -1,5 +1,4 @@
 import {
-  Dispatch,
   useCallback,
   useContext,
   useEffect,
@@ -17,19 +16,11 @@ import { useViewport } from "@/shared/hooks/useViewport";
 import { generateGridPositions } from "@/shared/helpers";
 import { storeContext } from "@/shared/constants/contexts";
 import { Animations } from "@/shared/constants";
-import { Coordinates } from "@/shared/types";
+
+import { Props } from "./types";
 
 const targetVector = new THREE.Vector3();
-
-type Props = {
-  activeAnimation: Animations;
-  randomCoordinates: Coordinates;
-  isAnimating: boolean;
-  isDragged: boolean;
-  imageClickHandler: (index: number) => void;
-  setIsControlsEnabled: Dispatch<React.SetStateAction<boolean>>;
-  setIsDragged: Dispatch<React.SetStateAction<boolean>>;
-};
+const offsetVector = new THREE.Vector3(0, 3, 0);
 
 export const ImagesCloud = observer(
   ({
@@ -68,23 +59,14 @@ export const ImagesCloud = observer(
       switch (activeAnimation) {
         case Animations.Grid: {
           refs.current.forEach((ref, i) => {
-            targetVector.set(
-              positionsGrid[i][0],
-              positionsGrid[i][1],
-              positionsGrid[i][2]
-            );
-
+            targetVector.set(...positionsGrid.get(i));
             ref.position.lerp(targetVector, 0.08);
           });
           break;
         }
         case Animations.Shuffle: {
           refs.current.forEach((ref, i) => {
-            targetVector.set(
-              randomCoordinates[i][0],
-              randomCoordinates[i][1],
-              randomCoordinates[i][2]
-            );
+            targetVector.set(...randomCoordinates[i]);
             ref.position.lerp(targetVector, 0.05);
           });
           break;
@@ -93,21 +75,22 @@ export const ImagesCloud = observer(
           if (selectedIndex !== null) {
             const selected = refs.current[selectedIndex];
             if (selected) {
-              const targetPosition = camera.position
-                .clone()
+              targetVector
+                .copy(camera.position)
                 .add(
                   camera
                     .getWorldDirection(new THREE.Vector3())
                     .multiplyScalar(2)
                 );
-              selected.position.lerp(targetPosition, 0.09);
+              selected.position.lerp(targetVector, 0.09);
 
               refs.current.forEach((ref, i) => {
                 if (i !== selectedIndex) {
-                  const targetPosition = ref.position.clone() as THREE.Vector3;
-                  targetPosition.setZ(farAway);
-                  targetPosition.add(new THREE.Vector3(0, 1, 0));
-                  ref.position.lerp(targetPosition, 0.1);
+                  targetVector
+                    .copy(ref.position)
+                    .setZ(farAway)
+                    .add(offsetVector);
+                  ref.position.lerp(targetVector, 0.1);
                 }
               });
             }
@@ -118,7 +101,7 @@ export const ImagesCloud = observer(
           refs.current.forEach((ref) => {
             const targetPosition = ref.position.clone() as THREE.Vector3;
             targetPosition.setZ(farAway);
-            targetPosition.add(new THREE.Vector3(0, 1, 0));
+            targetPosition.add(offsetVector);
             ref.position.lerp(targetPosition, 0.1);
           });
           break;

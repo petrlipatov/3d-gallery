@@ -15,25 +15,27 @@ export function generateRandomPositions(len): [number, number, number][] {
 }
 
 export const generateGridPositions = (
-  totalItems,
+  totalItems: number,
   spacing = 2
-): [number, number, number][] => {
+): Map<number, [number, number, number]> => {
   const cols = Math.ceil(Math.sqrt(totalItems));
   const rows = Math.ceil(totalItems / cols);
 
   const offsetX = ((cols - 1) * spacing) / 2;
   const offsetY = ((rows - 1) * spacing) / 2;
 
-  const positions = [];
+  const positions = new Map<number, [number, number, number]>();
 
+  let index = 0;
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
-      if (positions.length >= totalItems) return positions;
+      if (index >= totalItems) return positions;
 
       const x = col * spacing - offsetX;
       const y = row * spacing - offsetY;
 
-      positions.push([x, y, 0]);
+      positions.set(index, [x, y, 0]);
+      index++;
     }
   }
 
