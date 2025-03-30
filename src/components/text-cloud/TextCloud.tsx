@@ -12,7 +12,7 @@ export const TextsCloud = ({ activeAnimation }) => {
     <AnimatedText
       key={el}
       text={el}
-      position={textPositions[index]}
+      position={textPositions.get(index)}
       delay={Math.max(30 * index, 2000)}
     />
   ));
