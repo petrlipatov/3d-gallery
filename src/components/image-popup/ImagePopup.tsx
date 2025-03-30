@@ -6,7 +6,6 @@ import { Button } from "@/ui/button";
 import { Popup } from "@/ui/popup";
 import { ImageComponent } from "@/ui/image";
 import { Loader } from "@/ui/loader";
-
 import s from "./ImagePopup.module.css";
 
 export const ImagePopup = ({ imageId, onClose }) => {
