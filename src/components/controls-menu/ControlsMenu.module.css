@@ -1,0 +1,8 @@
+.controlsContainer {
+  position: absolute;
+  display: flex;
+  gap: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 32px;
+}

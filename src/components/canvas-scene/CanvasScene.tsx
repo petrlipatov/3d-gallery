@@ -6,8 +6,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { useSearchParams } from "react-router";
 import * as THREE from "three";
+import { useSearchParams } from "react-router";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Loader, useProgress } from "@react-three/drei";
 import { observer } from "mobx-react-lite";
@@ -17,13 +17,14 @@ import { TextsCloud } from "../text-cloud";
 import { ImagesCloud } from "../images-cloud";
 import { ImagePopup } from "../image-popup/ImagePopup";
 import { Navigation } from "../navigation";
+import { ControlsMenu } from "../controls-menu";
 
 import { useViewport } from "@/shared/hooks/useViewport";
 import { generateRandomPositions } from "@/shared/helpers";
 import { storeContext } from "@/shared/constants/contexts";
 import { Animations } from "@/shared/constants";
 import { Coordinates } from "@/shared/types";
-import { Button } from "@/ui/button";
+
 import s from "./CanvasScene.module.css";
 
 export const CanvasScene = observer(() => {
@@ -158,35 +159,14 @@ export const CanvasScene = observer(() => {
         </Canvas>
         <Loader />
 
-        <div className={s.controlsContainer}>
-          <Button
-            onClick={triggerRandomAnimation}
-            isLoading={isAnimating && activeAnimation === Animations.Random}
-          >
-            {Animations.Random}
-          </Button>
-
-          <Button
-            onClick={triggerShuffleAnimation}
-            isLoading={isAnimating && activeAnimation === Animations.Shuffle}
-          >
-            {Animations.Shuffle}
-          </Button>
-
-          <Button
-            onClick={triggerByDateAnimation}
-            isLoading={isAnimating && activeAnimation === Animations.Grid}
-          >
-            {Animations.Grid}
-          </Button>
-
-          <Button
-            onClick={triggerWhomiAnimation}
-            isLoading={isAnimating && activeAnimation === Animations.Whomi}
-          >
-            {Animations.Whomi}
-          </Button>
-        </div>
+        <ControlsMenu
+          isAnimating={isAnimating}
+          activeAnimation={activeAnimation}
+          triggerRandomAnimation={triggerRandomAnimation}
+          triggerShuffleAnimation={triggerShuffleAnimation}
+          triggerByDateAnimation={triggerByDateAnimation}
+          triggerWhomiAnimation={triggerWhomiAnimation}
+        />
 
         {authStore.isAuth && <Navigation location={"Home"} />}
         {selectedImage && (
