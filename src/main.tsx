@@ -7,7 +7,7 @@ import "./index.css";
 
 ReactGA.initialize("G-SZZ6EBZJD3");
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <App />

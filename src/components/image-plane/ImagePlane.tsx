@@ -7,12 +7,12 @@ import { BASE_API_URL, IMAGES_PATH } from "@/shared/constants";
 import { Props } from "./types";
 
 export const ImagePlane = forwardRef<THREE.Mesh, Props>(
-  ({ data, onClick, isDragged, index }, ref) => {
+  ({ data, onClick, isDragged }, ref) => {
     const [active, setActive] = useState(false);
 
     const { width } = useViewport();
     const isMobile = width < 768;
-    const { medium, small } = data;
+    const { medium, small, id } = data;
 
     const texture = useLoader(
       THREE.TextureLoader,
@@ -36,7 +36,7 @@ export const ImagePlane = forwardRef<THREE.Mesh, Props>(
         onPointerUp={(e) => {
           e.stopPropagation();
           if (!isDragged) {
-            onClick(index);
+            onClick(id);
           }
         }}
       >

@@ -4,6 +4,7 @@ export interface Props {
     large: string;
     medium: string;
     small: string;
+    id: number;
   };
   isDragged: boolean;
   onClick: (index: number) => void;
