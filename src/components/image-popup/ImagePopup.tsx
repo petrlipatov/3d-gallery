@@ -22,7 +22,7 @@ export const ImagePopup = ({ imageId, onClose }) => {
     navigate("/", { replace: true });
   };
 
-  const imageData = imagesStore.images[imageId];
+  const imageData = imagesStore.images.find((el) => el.id === Number(imageId));
 
   useEffect(() => {
     const imageSrc = `${BASE_API_URL}${IMAGES_PATH}${imageData.large}`;
