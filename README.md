@@ -11,7 +11,7 @@ When manipulating hundreds of objects in 3D space, libraries (eg GSAP, React-Spr
 ## Features
 
 - Navigate 3d gallery
-- Multiple sorting algorithms with lerp animations
+- Multiple sorting algorithms with fps-independent lerp animations
 - Drag & Drop elements
 - Hires images available by clicking
 - Upload images via authorized admin panel
