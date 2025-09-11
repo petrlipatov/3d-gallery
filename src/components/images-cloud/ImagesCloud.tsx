@@ -21,6 +21,7 @@ import { Props } from "./types";
 
 const targetVector = new THREE.Vector3();
 const offsetVector = new THREE.Vector3(0, 3, 0);
+const directionVector = new THREE.Vector3();
 
 export const ImagesCloud = observer(
   ({
@@ -71,9 +72,7 @@ export const ImagesCloud = observer(
               targetVector
                 .copy(camera.position)
                 .add(
-                  camera
-                    .getWorldDirection(new THREE.Vector3())
-                    .multiplyScalar(2)
+                  camera.getWorldDirection(directionVector).multiplyScalar(2)
                 );
               selected.position.lerp(targetVector, 0.09);
 
