@@ -47,21 +47,43 @@ export const ImagesCloud = observer(
       setSelectedIndex(randomIndex);
     }, [randomCoordinates.size]);
 
-    useFrame(function animationControllers() {
+    useFrame(function animationControllers(_, delta) {
       if (!isAnimating) return;
+
+      const clampedDelta = Math.min(delta, 0.03);
+
+      let lambda;
+      switch (activeAnimation) {
+        case Animations.Grid:
+          lambda = 5;
+          break;
+        case Animations.Shuffle:
+          lambda = 3;
+          break;
+        case Animations.Random:
+          lambda = 5.5;
+          break;
+        case Animations.Whomi:
+          lambda = 6.3;
+          break;
+        default:
+          lambda = 5; // Значение по умолчанию
+      }
+
+      const alpha = 1 - Math.exp(-lambda * clampedDelta);
 
       switch (activeAnimation) {
         case Animations.Grid: {
           refs.current.forEach((ref, i) => {
             targetVector.set(...positionsGrid.get(i));
-            ref.position.lerp(targetVector, 0.08);
+            ref.position.lerp(targetVector, alpha);
           });
           break;
         }
         case Animations.Shuffle: {
           refs.current.forEach((ref, i) => {
             targetVector.set(...randomCoordinates.get(i));
-            ref.position.lerp(targetVector, 0.05);
+            ref.position.lerp(targetVector, alpha);
           });
           break;
         }
@@ -74,7 +96,7 @@ export const ImagesCloud = observer(
                 .add(
                   camera.getWorldDirection(directionVector).multiplyScalar(2)
                 );
-              selected.position.lerp(targetVector, 0.09);
+              selected.position.lerp(targetVector, alpha);
 
               refs.current.forEach((ref, i) => {
                 if (i !== selectedIndex) {
@@ -82,7 +104,7 @@ export const ImagesCloud = observer(
                     .copy(ref.position)
                     .setZ(farAway)
                     .add(offsetVector);
-                  ref.position.lerp(targetVector, 0.1);
+                  ref.position.lerp(targetVector, alpha);
                 }
               });
             }
