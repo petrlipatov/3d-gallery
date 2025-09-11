@@ -27,9 +27,7 @@ export const ImagesCloud = observer(
     activeAnimation,
     randomCoordinates,
     isAnimating,
-    isDragged,
     imageClickHandler,
-    setIsDragged,
     setIsControlsEnabled,
   }: Props) => {
     const refs = useRef([]);
@@ -38,11 +36,6 @@ export const ImagesCloud = observer(
     const { imagesStore } = useContext(storeContext);
     const { width } = useViewport();
     const farAway = width < 768 ? 21 : 17;
-
-    const dragStartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-      null
-    );
-    const dragEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const positionsGrid = useMemo(() => {
       return generateGridPositions(imagesStore.images.length);
@@ -117,49 +110,24 @@ export const ImagesCloud = observer(
           gl.domElement
         );
 
-        const setDraggingOnWithDelay = () => {
-          dragStartTimerRef.current = setTimeout(() => {
-            setIsDragged(true);
-          }, 400);
+        const handleDrag = () => {
           setIsControlsEnabled(false);
         };
 
-        const setDraggingOffWithDelay = () => {
-          dragEndTimerRef.current = setTimeout(() => {
-            setIsDragged(false);
-          }, 400);
-          setIsControlsEnabled(true);
-        };
-
-        const handleDrag = () => {
-          if (dragStartTimerRef.current) {
-            return;
-          }
-          setDraggingOnWithDelay();
-        };
-
         const handleDragEnd = () => {
-          if (dragStartTimerRef.current) {
-            clearTimeout(dragStartTimerRef.current);
-            dragStartTimerRef.current = null;
-          }
-          if (dragEndTimerRef.current) clearTimeout(dragEndTimerRef.current);
-
-          setDraggingOffWithDelay();
+          setIsControlsEnabled(true);
         };
 
         dragControls.addEventListener("drag", handleDrag);
         dragControls.addEventListener("dragend", handleDragEnd);
 
         return () => {
-          clearTimeout(dragStartTimerRef.current);
-          clearTimeout(dragEndTimerRef.current);
           dragControls.removeEventListener("drag", handleDrag);
           dragControls.removeEventListener("dragend", handleDragEnd);
           dragControls.dispose();
         };
       },
-      [camera, gl, setIsControlsEnabled, isAnimating, setIsDragged]
+      [camera, gl, setIsControlsEnabled, isAnimating]
     );
 
     useEffect(() => {
@@ -177,7 +145,6 @@ export const ImagesCloud = observer(
                 index={index}
                 key={imagesStore.images[index].small}
                 data={imagesStore.images[index]}
-                isDragged={isDragged}
                 onClick={imageClickHandler}
                 ref={(el) => (refs.current[index] = el)}
               />

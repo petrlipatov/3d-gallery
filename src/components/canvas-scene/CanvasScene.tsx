@@ -31,7 +31,6 @@ export const CanvasScene = observer(() => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isControlsEnabled, setIsControlsEnabled] = useState<boolean>(true);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const [isDragged, setIsDragged] = useState<boolean>(false);
   const [randomCoordinates, setRandomCoordinate] = useState<Coordinates | null>(
     null
   );
@@ -72,9 +71,9 @@ export const CanvasScene = observer(() => {
 
   const openPopup = useCallback(
     (index: number) => {
-      if (!isDragged) setSearchParams({ image: String(index) });
+      setSearchParams({ image: String(index) });
     },
-    [isDragged, setSearchParams]
+    [setSearchParams]
   );
 
   const closePopup = (e: MouseEvent) => {
@@ -124,13 +123,11 @@ export const CanvasScene = observer(() => {
         >
           <Suspense fallback={null}>
             <ImagesCloud
-              isDragged={isDragged}
               isAnimating={isAnimating}
               activeAnimation={activeAnimation}
               randomCoordinates={randomCoordinates}
               imageClickHandler={openPopup}
               setIsControlsEnabled={setIsControlsEnabled}
-              setIsDragged={setIsDragged}
             />
             <TextsCloud activeAnimation={activeAnimation} />
             <About

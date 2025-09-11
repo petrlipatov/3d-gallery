@@ -6,6 +6,5 @@ export interface Props {
     small: string;
     id: number;
   };
-  isDragged: boolean;
   onClick: (index: number) => void;
 }

@@ -6,8 +6,7 @@ export type Props = {
   activeAnimation: Animations;
   randomCoordinates: Coordinates;
   isAnimating: boolean;
-  isDragged: boolean;
+
   imageClickHandler: (index: number) => void;
   setIsControlsEnabled: Dispatch<React.SetStateAction<boolean>>;
-  setIsDragged: Dispatch<React.SetStateAction<boolean>>;
 };
