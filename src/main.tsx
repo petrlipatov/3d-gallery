@@ -5,7 +5,10 @@ import { App } from "./components/app";
 import ReactGA from "react-ga4";
 import "./index.css";
 
-ReactGA.initialize("G-SZZ6EBZJD3");
+const trackingId = import.meta.env.VITE_GA_TRACKING_ID;
+if (trackingId) {
+  ReactGA.initialize(trackingId);
+}
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
