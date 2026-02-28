@@ -1,0 +1,58 @@
+# GitHub Actions воркфлоу для сборки и развертывания клиентского приложения
+# Триггер: запускается при каждом пуше в ветку 'main'
+
+name: Deploy Client to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest # Используем последнюю версию Ubuntu
+
+    steps:
+      - name: 1. Checkout repository
+        uses: actions/checkout@v4 # Шаг для клонирования репозитория
+
+      - name: 2. Setup Node.js
+        uses: actions/setup-node@v4 # Шаг для установки Node.js
+        with:
+          node-version: '20' # Укажите вашу версию Node.js
+          cache: 'npm' # Включаем кэширование зависимостей для ускорения
+
+      - name: 3. Install dependencies
+        run: npm install # Установка зависимостей
+
+      - name: 4. Create .env.production file
+        run: |
+          # Этот шаг создает файл .env.production из секретов GitHub.
+          # Вам нужно добавить в секреты репозитория все переменные отсюда.
+          echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> .env.production
+          echo "VITE_GA_TRACKING_ID=${{ secrets.VITE_GA_TRACKING_ID }}" >> .env.production
+          
+          echo "Generated .env.production file:"
+          cat .env.production
+
+      - name: 5. Build application
+        run: npm run build # Сборка проекта, Vite автоматически подхватит .env.production
+
+      - name: 6. Deploy to VPS via rsync
+        uses: easing-themes/ssh-deploy@v5.0.0
+        with:
+          # Приватный SSH-ключ
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          # Аргументы для rsync: -a (архивный режим), -z (сжатие), --delete (удалять отсутствующие)
+          ARGS: "-az --delete"
+          # Исходная директория
+          SOURCE: "dist/"
+          # Хост сервера
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          # Пользователь на сервере
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          # Порт на сервере
+          REMOTE_PORT: ${{ secrets.SSH_PORT }}
+          # Целевая директория
+          TARGET: ${{ secrets.TARGET_DIR }}
