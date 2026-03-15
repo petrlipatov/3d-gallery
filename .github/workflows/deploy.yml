@@ -32,14 +32,20 @@ jobs:
           # Вам нужно добавить в секреты репозитория все переменные отсюда.
           echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> .env.production
           echo "VITE_GA_TRACKING_ID=${{ secrets.VITE_GA_TRACKING_ID }}" >> .env.production
+          echo "VITE_YANDEX_METRIKA_ID=${{ secrets.VITE_YANDEX_METRIKA_ID }}" >> .env.production
 
           echo "Generated .env.production file:"
           cat .env.production
 
-      - name: 5. Build application
+      - name: 5. Inject Metrika ID in index.html
+        run: |
+          sed -i 's|__YANDEX_METRIKA_ID__|${{ secrets.VITE_YANDEX_METRIKA_ID }}|g' index.html
+          echo "Injected Yandex Metrika ID into index.html"
+
+      - name: 6. Build application
         run: npm run build # Сборка проекта, Vite автоматически подхватит .env.production
 
-      - name: 6. Create target directory on server
+      - name: 7. Create target directory on server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -48,7 +54,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: mkdir -p ${{ secrets.TARGET_DIR }}
 
-      - name: 7. Deploy to VPS via rsync
+      - name: 8. Deploy to VPS via rsync
         uses: easingthemes/ssh-deploy@main
         with:
           # Приватный SSH-ключ

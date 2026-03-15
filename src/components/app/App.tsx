@@ -5,12 +5,14 @@ import { Home } from "@/pages/home";
 import { Admin } from "@/pages/admin";
 import { Login } from "@/pages/login";
 import { ProtectedRoute } from "@/components/protected-route";
+import { YandexMetrika } from "@/components/yandex-metrika";
 // import { Helmet } from "react-helmet";
 
 export const App = () => {
   return (
     <ViewportProvider>
       <StoreProvider>
+        <YandexMetrika />
         {/* <Helmet htmlAttributes={{ lang: "en" }}>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
